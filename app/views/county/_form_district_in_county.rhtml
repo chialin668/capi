@@ -1,0 +1,67 @@
+<%= error_messages_for 'my_school' %>
+
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<table>
+		<tr>
+			<td><label for="district_code">District:</label></td>
+			<td>
+				<%=	
+					found_code = false;
+			       	@district_code = params[:district_code] 
+					districts=District.get_districts(@school_type, @county_code)
+					district_code_arr=[]
+					for district in districts
+					  found_code = true if @district_code.to_i==district.district_code.to_i
+					  arr = [district.district_name, district.district_code ]
+					  district_code_arr << arr
+					end
+
+					@district_code=district_code_arr[0][1] if not found_code
+
+					select_tag(:district_code, options_for_select(district_code_arr, @district_code.to_i))
+				%>	
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+					observe_field(:district_code,
+								     :url => {:action => :api_district_in_county},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+	 
+			</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td>
+				<%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_district_in_county_xml"} ) %>						
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+				<%
+				  params="school_type=#{@school_type}&year=#{@year}&school_code=#{@school_code}&district_code=#{@district_code}&county_code=#{@county_code}"
+				%>
+				
+				Go to: <a href='<%=@app_base%>/district/api_score?<%=params%>'><%=@district_name%></a><br />
+			</td>
+		</tr>
+		
+	</table>
+	
+	
+</div>	
+

@@ -1,0 +1,41 @@
+<%
+	ajax_params="'county_name='+ escape($('county_name').value) " +
+			"+ '&html_type='+ escape($('html_type').value)" + 
+			"+ '&mtype='+ escape($('mtype').value)" + 
+			"+ '&stype='+ escape($('stype').value)" 
+
+%>
+
+
+<table>
+
+<% states = TruSummary.get_state_names %>
+<% rowcount=17 %>
+
+<% 0.upto(rowcount-1) { |x| %>				
+<tr>
+	
+	<%for i in (0..states.size-1) %>
+		<% if i%rowcount==x then %>
+		<%
+			display_number = states[i].num_listed.to_s.gsub(/(.)(?=.{3}+$)/, %q(\1,))
+			num_listed = states[i].num_listed.to_i
+			style = "style='font-size: 10px;'" if num_listed < 3000
+			style = "style='font-size: 12px;'" if num_listed > 3000  and num_listed < 10000
+			style = "style='font-size: 14px;'" if num_listed > 10000 and num_listed < 20000
+			style = "style='font-size: 16px;'" if num_listed > 20000 and num_listed < 50000
+			style = "style='font-size: 18px;'" if num_listed > 50000 and num_listed < 100000
+			style = "style='font-size: 22px;'" if num_listed > 100000
+		%>
+		<td width='200'><a href='/summary/state?type=state&name=<%=states[i].state_code%>&tru_type=listed' <%=style%>><%=states[i].name%> </a>
+				<font size=-2>(<%=  display_number %>)</font><br /></td>
+		<%end%>	
+	<% end %>
+</tr>
+<% } %>
+</table>
+
+
+
+		
+

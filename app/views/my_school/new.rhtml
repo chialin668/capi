@@ -1,0 +1,10 @@
+<h2>Add a new school:</h2>
+
+<% form_tag :action => 'create' do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag "Create" %>
+  <br />
+<% end %>
+
+<br />
+<%= link_to 'Back', :action => 'list' %>

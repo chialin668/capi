@@ -1,0 +1,196 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>Number of Valid Scores:</h3>
+	<table>
+		<tr>
+			<td align='right'>	
+				<p><label for="test">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2005) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : year[0][1])
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&test_name='+ escape($('test_name').value)" + 
+						"+ '&score_type='+ escape($('score_type').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :pcst},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+
+		<tr>
+			<td align='right'>	
+				<p><label for="type">Test Name:</label>
+			</td>
+			<td>
+				<%=
+					test_names=[
+								['California Standard Test (CST)', 'CST']
+						]
+
+
+					test_names << ['Californa High School Exit Exaimination (CHS)', 'CHS'] if @school_type=='H'
+					test_names << ['Norm-Referenced Test (NRT)', 'NRT'] if School.has_3rd_or_7th_grade?(@school_code)
+# ['Assignment of 200 CST', 'M200']
+
+					@test_name = (params[:test_name] ? params[:test_name] : test_names[0][1])
+					select_tag(:test_name, options_for_select(test_names, @test_name))
+				%>
+				
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&test_name='+ escape($('test_name').value)" + 
+						"+ '&score_type='+ escape($('score_type').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:test_name,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :pcst},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+				
+			</td>
+		</tr>
+
+		<tr>
+			<td align='right'>
+				<p><label for="score_type">Score Type:</label>
+			</td>
+			<td>
+
+				<%=
+					score_types=[	
+								['Non-Weighted', 'VALID'],
+								['Weighted', 'PRODUCT']
+						]
+
+					@score_type = (params[:score_type] ? params[:score_type] : score_types[0][1])
+
+					select_tag(:score_type, options_for_select(score_types, @score_type))
+				%>
+				
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&test_name='+ escape($('test_name').value)" + 
+						"+ '&score_type='+ escape($('score_type').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:score_type,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :pcst},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+				
+			</td>
+			
+		</tr>
+
+		<tr>
+			<td></td>
+			<td>
+			<% if @year %>
+				<% 
+					@xmlurl="xml_source=#{@app_base}/#{@app_name.downcase}/pcst_xml?" +
+								"xml_params=" + 
+									"test_id=#{@test_id}|" + 
+									"grade=#{@grade}|" + 
+									"year=#{@year}|" + 
+									"test_name=#{@test_name}|" + 
+									"score_type=#{@score_type}|" + 
+									"school_type=#{@school_type}|" +
+									"school_code=#{@school_code}|" +
+									"district_code=#{@district_code}|" + 
+									"county_code=#{@county_code}" 
+				%>
+				<table cellspacing='0' border='1'>
+					<tr>
+						<td>
+						<%= render(:partial => "templates/#{@theme}/chart_obj") %>
+						</td>
+					</tr>
+				</table>
+			<% end %>	
+			</td>
+		</tr>
+	</table>
+
+<br />
+
+<% if @school_type=='H'%>
+	<h4> Test Weights (Grade9~11):</h4>
+	<ul>
+		<li>CST in English-Language Arts: .30</li>
+		<li>CST in Mathematics: .20</li>
+		<li>CST in Science: .22</li>
+		<li>CST in History-Social Science: .23</li>
+		<li>CST in Life Science: .10</li>
+	</ul>
+	<ul>
+		<li>CAHSEE English-Language Arts: .30</li>
+		<li>CAHSEE Mathematics: .30</li>
+	</ul>	
+	<ul>
+		<li>Assignment of 200, CST in Mathematics: .10</li>
+		<li>Assignment of 200, CST in Science: .05</li>
+	</ul>
+<% else %>
+ 
+	<h4> Test Weights (Grade2~8):</h4>
+	<ul>
+		<li>CST in English-Language Arts: .48</li>
+		<li>CST in Science: .20</li>
+		<li>CST in Mathematics: .32</li>
+		<li>CST in History-Social Science: .20</li>
+		<li>CST in Science: .20</li>
+	</ul>
+	
+	<ul>
+		<li>CAT/6 Survey in Reading: .06</li>
+		<li>CAT/6 Survey in Language: .03</li>
+		<li>CAT/6 Survey in Spelling: .03</li>
+		<li>CAT/6 Survey in Mathematics: .08</li>
+	</ul>
+	<ul>
+		<li>Assignment of 200, CST in Mathematics: .10</li>
+	</ul>
+
+<% end %>
+
+
+</div>	
+
+

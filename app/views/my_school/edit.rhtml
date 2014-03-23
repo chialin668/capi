@@ -1,0 +1,11 @@
+<h2>Editing my school</h2>
+
+<% form_tag :action => 'update', :id => @my_school do %>
+  <%= render :partial => 'form' %>
+  <br />
+  <%= submit_tag 'Save' %>
+<% end %>
+
+<br />
+<%= link_to 'Back', :action => 'list' %>
+

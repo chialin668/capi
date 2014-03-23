@@ -1,0 +1,16 @@
+
+<div id='sidebar_ajax'>
+	<% 
+		# also called by county.rhtml 
+		html, tagline, marker_not_found = county_draw_markers(nil)
+
+		mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>" 
+		html += mnf_symbol_str if marker_not_found
+	 %>
+	 
+	<%= html %>	
+	
+</div>		
+
+<br />
+<!--[<A HREF="<%=@app_base%>/cns">Back</A>]-->

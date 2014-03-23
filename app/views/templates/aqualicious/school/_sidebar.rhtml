@@ -1,0 +1,69 @@
+<div id="sidebarContainer">
+	<div id="sidebar">
+		<div id="sidebar-categories">
+
+<%
+ajax_params=
+	"'school_type='+ escape($('school_type').value) " + 
+	"+ '&html_type='+ escape($('html_type').value)" + 
+	"+ '&year='+ escape($('year').value)" + 
+	"+ '&school_code='+ escape($('school_code').value)" + 
+	"+ '&district_code='+ escape($('district_code').value)" + 
+	"+ '&county_code='+ escape($('county_code').value)"
+%>
+
+<h3>Score Trends:</h3>
+&#164; <%= link_to_remote( "API Growth Trend", :url => { :controller => 'school', :action => 'api_score'}, :update => "ajax_div", :with => ajax_params ) %><br/>
+&#164; <%= link_to_remote( "Compare Scores", :url => { :controller => 'school', :action => 'api_all_scores'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "School Ranks", :url => { :controller => 'school', :action => 'api_rank'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Mean Scaled Scores", :url => { :controller => 'school', :action => 'star_summary_mean'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Performance Levels", :url => { :controller => 'school', :action => 'star_summary_pct'}, :update => "ajax_div", :with => ajax_params) %><br/>
+<% if School.has_3rd_or_7th_grade?(@school_code) %>
+	&#164; <%= link_to_remote( "PACs", :url => { :controller => 'school', :action => 'star_summary_pac'}, :update => "ajax_div", :with => ajax_params)  %><br/>
+<% end %>	
+<br/>
+
+<h3>By Year:</h3>
+&#164; <%= link_to_remote( "API Details", :url => { :controller => 'school', :action => 'api_detail'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Distribution by Subject", :url => { :controller => 'school', :action => 'star_distribution'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Race Distribution", :url => { :controller => 'school', :action => 'race'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "API BY Race", :url => { :controller => 'school', :action => 'api_by_race'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Subgroup Detail - Race", :url => { :controller => 'school', :action => 'subgroup_detail_by_race'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Subgroup Detail - Others", :url => { :controller => 'school', :action => 'subgroup_detail_other'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Parent Education Level", :url => { :controller => 'school', :action => 'parent_ed_level'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Average Class Size", :url => { :controller => 'school', :action => 'avg_class_size'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Student Demographic", :url => { :controller => 'school', :action => 'special_student'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Number of Valid Scores", :url => { :controller => 'school', :action => 'pcst'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Teacher Credentials", :url => { :controller => 'school', :action => 'teacher'}, :update => "ajax_div", :with => ajax_params) %><br/>
+&#164; <%= link_to_remote( "Percent of Enrollment", :url => { :controller => 'school', :action => 'pct_enrollment'}, :update => "ajax_div", :with => ajax_params) %><br/>
+<br/>
+
+<hr>
+
+<h3><%=@district_name%></h3>
+&#164; <a href='/api/districts?year=<%=@current_year%>&school_type=<%=@school_type%>&county_name=<%=@county_name%>&district_name=<%=@district_name%>'>School Ranks</a><br />
+&#164; <a href='/district/api_score?year=<%=@current_year%>&school_type=<%=@school_type%>&school_code=<%=@school_code%>&district_code=<%=@district_code%>&county_code=<%=@county_code%>'>District API</a><br />
+&#164; School in District<br />
+&#164; <a href='/cns/district?stype=<%=@school_type%>&county_name=<%=@county_name%>&district_cds=<%=@cds%>'>Schools On Google Map</a><br />
+<br />
+
+<hr>
+
+<h3>Compare:</h3>
+<%
+	api_from = @api_score.to_i - 10
+	api_to = @api_score.to_i + 10
+%>
+&#164; <a href='/search/search?search_type=api&school_type=<%=@school_type%>&api_from=<%=api_from%>&api_to=<%=api_to%>'>Similar Schools</a> <br />
+&#164; <a href='/search/search?search_type=advanced&query=region:sf AND school_type:<%=@school_type%> AND api_score:>=<%=api_from%> AND api_score:<=<%=api_to%>'>Similar Schools in Region</a> <br />
+&#164; <a href='/search/search?search_type=advanced&query=county_name:<%=@county_name%> AND school_type:<%=@school_type%> AND api_score:>=<%=api_from%> AND api_score:<=<%=api_to%>'>Similar Schools in County</a> <br />
+
+<br />
+
+<!--[<A HREF="javascript:javascript:history.go(-1)">Back</A>]-->
+
+		</div>					 
+	</div> <!-- sidebar -->
+
+</div> <!-- sidbarContainer -->
+

@@ -1,0 +1,123 @@
+
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :school_type, @school_type %>
+
+	<table>
+		<%
+			if School.has_7th_grade?(@school_code)
+			   @grade='7' # for middle school
+			else
+				@grade='3' # for elementary school
+			end
+		%>		
+		<tr>
+			<td>	
+				<p><label for="year">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2004) do |year|
+						years << [year.to_s, year]
+					end				
+
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_code='+ escape($('school_code').value) " + 
+						"+ '&year='+ escape($('year').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :star_summary_pac},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+
+		<tr>
+			<td>	
+				<p><label for="test">Test Name:</label>
+			</td>
+			<td>
+				<%=
+					found_test = false
+					tests=School.get_cat6_test_names(@year, @grade, @school_code)	
+					test_arr=[]
+					tests.each {|t| 
+						found_test = true if params[:test_id].to_i == t.test_id.to_i
+						arr=[t.test_name, t.test_id]
+						test_arr << arr
+					}
+
+					# default value
+					if params[:test_id] and found_test
+			        	@test_id = params[:test_id]
+					else 
+						if tests.length > 0
+							@test_id=tests[0].test_id
+						else
+							@test_id=0
+						end
+					end
+
+					select_tag(:test_id, options_for_select(test_arr, @test_id.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&test_id='+ escape($('test_id').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" 
+
+					observe_field(:test_id,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :star_summary_pac},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+				
+				
+		<tr>
+			<td></td>
+			<td>
+				<% 
+					@xmlurl="xml_source=#{@app_base}/#{@app_name.downcase}/pac_value_xml?" +
+								"xml_params=" + 
+									"test_id=#{@test_id}|" + 
+									"grade=#{@grade}|" + 
+									"year=#{@year}|" + 
+									"school_code=#{@school_code}|" 
+				%>
+				<table cellspacing='0' border='1'>
+					<tr>
+						<td>
+						<%= render(:partial => "templates/#{@theme}/chart_obj") %>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+					Percentage of students above the 2000 national sample (75th NPR).
+			</td>
+		</tr>
+
+	</table>
+	
+	<%= render(:partial => "go_to") %>
+	
+</div>	
+
+
+

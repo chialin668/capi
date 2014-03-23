@@ -1,0 +1,24 @@
+		<table cellspacing='0' border='1'>
+		<tr>
+			<th>Rank</th>
+			<th>School Name</th>
+			<th>District Name</th>
+			<th>County Name</th>
+			<th>Score</th>
+		</tr>
+		<%rank=0%>
+		<%score_tmp=0%>
+		<% for record in @hrecords %> 
+			<tr>
+				<% rank=rank+1 unless record.growth==score_tmp %>
+				<td><%=rank%></td>
+				<td><%=record.sname%> </td>
+				<td><%=record.dname%></td>
+				<td><%=record.cname%></td>
+				<td align='right'><%=record.growth%></td>
+				<% score_tmp = record.growth%>
+			</tr>
+		<% end %>	
+		</table>
+		
+		<br />

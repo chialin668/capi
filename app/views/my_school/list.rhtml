@@ -1,0 +1,63 @@
+
+<% if MySchool.count_my_schools(session[:user_id])==0 then %>
+
+	<h2>The list is empty.</h2>
+	
+<% else %>
+	<h2>List of My Schools: (with #{current_year} ranks)</h2>
+	
+	<table cellspacing='0' border='1'>
+	  <tr>
+		<th class='table_header'>Type</th>
+		<th class='table_header'>County Name</th>
+		<th class='table_header'>District Name</th>
+		<th class='table_header'>School Name</th>
+		<th class='table_header'>API</th>
+		<th class='table_header'>State</th>
+		<th class='table_header'>County</th>
+		<th class='table_header'>District</th>
+		<th class='table_header'></th>		
+		<th class='table_header'></th>
+	  </tr>
+	  
+	<% 
+
+	stype=%w{H M E}
+	stype.each do |stype|
+		my_school=MySchool.find_by_user_id_and_school_type(session[:user_id], stype)
+		if my_school then
+	  %>  
+		  <tr>
+		  	<% school_type='High' if stype=='H' %>
+		  	<% school_type='Middle' if stype=='M' %>
+		  	<% school_type='Elemantary' if stype=='E' %>
+			  <td><%=school_type%></td>
+			  <td><%=my_school.county_name%></td>
+			  <td><%=my_school.district_name%></td>
+			  <td><%=my_school.school_name%></td>
+			  <td><%=my_school.api_score%></td>
+			  <td align='center'><%=my_school.state_rank%></td>
+			  <td align='center'><%=my_school.county_rank%></td>
+			  <td align='center'><%=my_school.district_rank%></td>
+			  
+			  <td><%= link_to 'Edit', :action => 'edit', :id => my_school %></td>
+		      <td><%= link_to 'Delete', { :action => 'destroy', :id => my_school }, :confirm => 'Are you sure?', :method => :post %></td>
+		  </tr>
+	  <% end %>
+	<% end %>
+	</table>
+	
+	<%= link_to 'Previous page', { :page => @my_school_pages.current.previous } if @my_school_pages.current.previous %>
+	<%= link_to 'Next page', { :page => @my_school_pages.current.next } if @my_school_pages.current.next %> 
+	
+
+<% end %>
+
+<br />
+
+<%= if !MySchool.has_high_school?(session[:user_id]) ||
+			!MySchool.has_middle_school?(session[:user_id]) ||
+			!MySchool.has_elemantary_school?(session[:user_id]) then
+		link_to 'Click here to add a new school...', :action => 'new' 
+	end
+%>

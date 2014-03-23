@@ -1,0 +1,60 @@
+
+<%
+school_type=''
+case @school_type
+	when 'H'
+		school_type='High'
+	when 'M'
+		school_type='Middle'
+	when 'E'
+		school_type='Elementary'
+end
+%>
+
+<h2><%= school_type %> Schools: </h2>
+
+<table cellspacing='0' border='1'>
+<tr>
+	<th class='rank' align='center'>Rank</th>
+	<th class='school' align='center'>School Name</th>
+	<th class='district' align='center'>District Name</th>
+	<th class='county' align='center'>County Name</th>
+	<th class='score' align='center'>Score</th>
+</tr>
+
+<% for record in @records %>
+	<%param_string="year=#{@current_year}&school_type=#{@school_type}&school_code=#{record.school_code}&district_code=#{record.district_code}&county_code=#{record.county_code}"%>
+	<% school_name = record.school_name.length <35 ? record.school_name : "#{record.school_name[0,35]}..." %>
+	<tr>
+		<td align='center'><%=record.state_rank%></td>
+		<td><a href='<%=@app_base%>/school/api_score?<%=param_string%>'><%=school_name%></a></td>
+		<td><a href='<%=@app_base%>/district/api_score?<%=param_string%>'><%=record.district_name%></a></td>
+		<td><a href='<%=@app_base%>/county/api_score?<%=param_string%>'><%=record.county_name%></a></td>
+		<td align='center'><%=record.api_score%></td>
+	</tr>
+<% end %>	
+
+</table>
+<br />
+
+<%= if @record_pages.current.previous
+		link_to 'Previous page', { :page => @record_pages.current.previous , 
+									:year=>@year, 
+									:school_type=>@school_type
+									}  
+	else
+		'Previous page'	 
+	end 
+%> 
+	| 
+<%= if @record_pages.current.next
+		link_to 'Next page', { :page => @record_pages.current.next, 
+								:year=>@year, 
+								:school_type=>@school_type 
+								}  
+	else
+		'Next page'	 
+	end 
+%> 
+
+

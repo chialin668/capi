@@ -1,0 +1,94 @@
+<% if !@county_name %>
+
+	<%
+		@title="Carlifornia API Summary"
+		@tagline="#{@year} Academic Performance Index"
+	%>
+
+	<% 
+		county_names=[]
+		for county in @counties
+			county_names << county.county_name
+		end
+	%>
+	
+	<table>
+		<% rowcount=15 %>
+		<% 0.upto(rowcount-1) { |x| %>				
+		<tr>
+			<%for i in (0..county_names.size) %>
+				<% if i%rowcount==x then %>
+				<td width='200'><%= %Q(<a href='#{@app_base}/api/counties?year=#{@year}&school_type=#{@school_type}&county_name=#{county_names[i]}'>#{county_names[i]}) %></td>
+				<%end%>	
+			<% end %>
+		</tr>
+		<% } %>
+						
+	</table>
+
+
+<% else %>
+
+	<%
+		@title="#{@county_name} County"
+		@tagline="#{@year} Academic Performance Index"
+	%>
+	
+	<% school_type='High' if @school_type=='H' %>
+	<% school_type='Middle' if @school_type=='M' %>
+	<% school_type='Elementary' if @school_type=='E' %>
+	<h2><%= school_type %> Schools: </h2>
+	
+	<table cellspacing='0' border='1'>
+	<tr>
+		<th class='rank' align='center'>County</th>
+		<th class='rank' align='center'>State</th>
+		<th class='school' align='center'>School Name</th>
+		<th class='district' align='center'>District Name</th>
+		<th class='score' align='center'>Score</th>
+	</tr>
+	
+				
+	<% for record in @records %>
+	<%param_string="year=#{@current_year}&school_type=#{@school_type}&school_code=#{record.school_code}&district_code=#{record.district_code}&county_code=#{record.county_code}"%>
+	<% school_name = record.school_name.length <35 ? record.school_name : "#{record.school_name[0,35]}..." %>
+		<tr>
+			<td align='center'><%=record.county_rank%></td>
+			<td align='center'><%=record.state_rank%></td>
+			<td><a href='<%=@app_base%>/school/api_score?<%=param_string%>'><%=school_name%></a></td>
+			<td><a href='<%=@app_base%>/district/api_score?<%=param_string%>'><%=record.district_name%></a></td>
+			<td align='center'><%=record.api_score%></td>
+		</tr>
+	<% end %>	
+		
+	
+	</table>
+	<br />
+
+
+	<%= if @record_pages.current.previous
+			link_to 'Previous page', { :page => @record_pages.current.previous , 
+										:year=>@year, 
+										:school_type=>@school_type,
+										:county_name=>@county_name
+										}  
+		else
+			'Previous page'	 
+		end 
+	%> 
+		| 
+	<%= if @record_pages.current.next
+			link_to 'Next page', { :page => @record_pages.current.next, 
+										:year=>@year, 
+										:school_type=>@school_type,
+										:county_name=>@county_name
+									}  
+		else
+			'Next page'	 
+		end 
+	%> 
+	
+	<br /><br />
+
+
+<% end %>

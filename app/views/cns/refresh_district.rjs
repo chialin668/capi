@@ -1,0 +1,49 @@
+
+url_base="http://www.ifansee.com"
+api_app_base="/capi"
+
+title = "<h1>#{@district_name}</h1>"
+tagline = ""
+
+@map = Variable.new("map")
+page << @map.clear_overlays
+
+# County boundary
+draw_polygons(page, @polygons)
+draw_polygons(page, @district_polygons)
+
+marker_not_found=false
+html, tagline, marker_not_found = district_draw_markers(page) 
+
+mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>"
+html += mnf_symbol_str if marker_not_found
+
+bnf_msg = "<br /><br /><font size='-2'>&#8225;Geo info not found for district.</font>"
+html += bnf_msg if @district_polygons.size==0 
+
+set_geo_center(page) 
+
+page['pageHeader'].replace_html(title + tagline)
+page['sidebar_ajax'].replace_html(html)
+
+
+# Legend
+draw_legend(page)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

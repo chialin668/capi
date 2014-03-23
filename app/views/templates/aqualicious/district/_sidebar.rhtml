@@ -1,0 +1,48 @@
+
+
+<%
+  params="year=#{@year}&school_code=#{@school_code}&district_code=#{@district_code}&county_code=#{@county_code}"
+%>
+<div id="sidebarContainer">
+	<div id="sidebar">
+		<div id="sidebar-categories">
+
+
+<%
+ajax_params=
+	"'school_type='+ escape($('school_type').value) " + 
+	"+ '&html_type='+ escape($('html_type').value)" + 
+	"+ '&year='+ escape($('year').value)" + 
+	"+ '&school_code='+ escape($('school_code').value)" + 
+	"+ '&district_code='+ escape($('district_code').value)" + 
+	"+ '&county_code='+ escape($('county_code').value)"
+%>
+
+<h3>Details:</h3>
+&#164; <%= link_to_remote( "API Growth Trend", :update => "ajax_div", :url => { :controller => 'district', :action => 'api_score'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "API Scores", :update => "ajax_div", :url => { :controller => 'district', :action => 'api_all_scores'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Mean Scaled Scores", :update => "ajax_div", :url => { :controller => 'district', :action => 'star_summary_mean'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% if School.has_3rd_or_7th_grade?(@school_code) %>
+	&#164; <%= link_to_remote( "PACs", :update => "ajax_div", :url => { :controller => 'district', :action => 'star_summary_pac'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% end %>	
+&#164; <%= link_to_remote( "Performance Levels", :update => "ajax_div", :url => { :controller => 'district', :action => 'star_summary_pct'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+
+<!-- High, middle, Elementary -->
+&#164; <%= link_to_remote( "School in District", :update => "ajax_div", :url => { :controller => 'district', :action => 'api_school_in_district'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<br/>
+
+<h3>Map:</h3>
+<%
+	cds= "%02d%05d0000000" % [@county_code, @district_code]
+%>
+&#164; <a href='/cns/district?stype=<%=@school_type%>&county_name=<%=@county_name%>&district_cds=<%=cds%>'>District Map</a>
+
+<br /><br />
+
+[<A HREF="javascript:javascript:history.go(-1)">Back</A>]
+			
+		</div>					 
+	</div> <!-- sidebar -->
+
+</div> <!-- sidbarContainer -->
+

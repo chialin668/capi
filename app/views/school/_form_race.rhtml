@@ -1,0 +1,68 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+ 	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>Race Distribution:</h3>
+	<table>
+		<tr>
+			<td>	
+				<p><label for="year">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2004) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : years[0][1])
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :race},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+			<% if @year %>
+				<% 
+					@xmlurl="xml_source=#{@app_base}/#{@app_name.downcase}/race_xml?" +
+								"xml_params=" + 
+									"test_id=#{@test_id}|" + 
+									"grade=#{@grade}|" + 
+									"year=#{@year}|" + 
+									"school_code=#{@school_code}|" +
+									"district_code=#{@district_code}|" + 
+									"county_code=#{@county_code}" 
+				%>
+				<table cellspacing='0' border='1'>
+					<tr>
+						<td>
+						<%= render(:partial => "templates/#{@theme}/chart_obj") %>
+						</td>
+					</tr>
+				</table>
+			<% end %>	
+			</td>
+		</tr>
+	</table>
+</div>	
+

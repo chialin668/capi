@@ -1,0 +1,49 @@
+<div id='ajax_div'>
+	
+	<%= hidden_field_tag :html_type, 'ajax' %>
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+	
+	<%= hidden_field_tag :county_name, @county_name %>
+
+	<table cellspacing='0' border='1'>
+		<tr>
+			<td>
+				<%=
+			      @map = GMap.new("map_div")
+			      @map.control_init(:large_map => true, :map_type => true)
+			      @map.center_zoom_init([37.420644, -121.021325], 8) # center of California
+	
+				  load_markers(@map)
+				  color2icons = init_color_icons(nil)
+	
+		      	  #icon = get_icon(color2icons, 3, 800)
+				  #@map.record_init @map.add_overlay(GMarker.new([37.420644, -121.021325],
+					#					:icon => icon,
+					#					:title => 'title', 
+					#					:info_window => 'info'))
+	
+				  # resize the map (has to be at the end)						
+				  @map.div(:width => 670, :height => 550)
+				%>
+			</td>
+		</tr>
+	</table>		
+	
+		<div id='legend_ajax'>
+		</div>			
+	
+	<!--% 
+		if @polygons
+			draw_polygons(nil, @polygons)
+		
+			# also called by _sidebar.rhtml (_county.rhtml)
+			html, tagline, marker_not_found = county_draw_markers(nil)
+			set_geo_center(nil)	
+		end	
+	 %-->
+	 
+</div>

@@ -1,0 +1,55 @@
+<%= hidden_field_tag :html_type, 'ajax' %>
+
+<%
+	ajax_params="'stype='+ escape($('stype').value) " +
+			"+ '&scount='+ escape($('scount').value)" +
+			"+ '&html_type='+ escape($('html_type').value)" 
+%>
+
+<h3>Please Choose:</h3>
+
+<br />
+<!------------------- School Type ---------------------->
+School Type:
+	<%= 
+		default_value_arr = ['High', 'H'] if @stype == 'H'
+		default_value_arr = ['Middle', 'M'] if @stype == 'M'
+		default_value_arr = ['Elementary', 'E'] if @stype == 'E'
+		
+		select_tag(:stype, options_for_select([['High', 'H'], ['Middle', 'M'], ['Elementary', 'E']], default_value_arr), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => :refresh_state},
+								:with => ajax_params)) 
+	%>
+<br /><br />
+
+
+
+Display Top : 
+
+	<%= 
+		default_value_arr = []
+		default_value_arr << @scount.to_i
+		select_tag(:scount, options_for_select([10, 20, 30, 40, 50], default_value_arr), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => :refresh_state},
+								:with => ajax_params)) 
+	%>
+school.	
+<br /><br />
+
+<hr>
+
+<div id='sidebar_ajax'>
+	<% 
+		# also called by state.rhtml 
+		html, tagline, marker_not_found = state_draw_markers(nil)
+		mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>" 
+		html += mnf_symbol_str if marker_not_found
+	 %>
+	 
+	<%= html %>	
+</div>		
+
+<br />
+[<A HREF="javascript:javascript:history.go(-1)">Back</A>]

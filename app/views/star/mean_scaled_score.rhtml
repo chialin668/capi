@@ -1,0 +1,41 @@
+
+<h2><%=@test_name%></h2>
+<h4>Grade: <%=@grade%></h4>
+<table cellspacing='0' border='1'>
+<tr>
+	<th class='rank' align='center'>Rank</th>
+	<th class='school' align='center'>School Name</th>
+	<th class='county' align='center'>County Name</th>
+	<th class='district' align='center'>District Name</th>
+	<th class='score' align='center'>Score</th>
+</tr>
+<%rank=0%>
+<% for record in @records %> 
+	<tr>
+		<%rank=rank+1%>
+		<td align='center'><%=record.state_rank_mean%></td>
+		<td><%=record.school_name%> </td>
+		<td><%=record.county_name%></td>
+		<td><%=record.district_name%></td>
+		<td align='center'><%=record.mean_scaled_score%></td>
+		
+	</tr>
+<% end %>	
+</table>
+
+<br />
+
+<%= link_to 'Previous page', { :page => @record_pages.current.previous , 
+								:grade=>@grade, 
+								:test_id=>@test_id,
+								:test_name=>@test_name
+							} if @record_pages.current.previous %> 
+<% if @record_pages.current.previous && @record_pages.current.next %> 
+	| 
+<% end %>
+<%= link_to 'Next page', { :page => @record_pages.current.next, 
+								:grade=>@grade, 
+								:test_id=>@test_id,
+								:test_name=>@test_name
+						} if @record_pages.current.next %> 
+<br /><br />

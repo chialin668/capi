@@ -1,0 +1,12 @@
+
+
+
+<% type=params[:type] %>
+<%= render(:partial => "top5") if type==nil or type=='top5' %>
+<%= render(:partial => "api") if type=='api' %>
+<%= render(:partial => "mean") if type=='mean' %>
+<%= render(:partial => "pct") if type=='pct' %>
+<%= render(:partial => "pac") if type=='pac' %>
+<%= render(:partial => "race") if type=='race' %>
+<%= render(:partial => "api_by_race") if type=='api_by_race' %>
+

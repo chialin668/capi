@@ -1,0 +1,8 @@
+
+
+<% form_tag :controller => @app_name.downcase, :action => 'search' do %>
+	School Type: <%= select_tag(:school_type, options_for_select([['High', 'H'], ['Middle', 'M'], ['Elementary', 'E']])) %><br /><br />
+	API Score from: <%= text_field_tag 'api_from', nil, {:size=>10} %> to: <%= text_field_tag 'api_to', nil, {:size=>10} %> 
+	<%= hidden_field_tag :search_type, @search_type %> 
+	<%= submit_tag "Search" %>
+<% end %>

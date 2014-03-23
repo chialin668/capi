@@ -1,0 +1,15 @@
+
+
+
+  @map = Variable.new("map") 
+
+  load_markers(@map)
+
+  color2icons = init_color_icons(page)
+  
+  page << @map.clear_overlays
+  hello_draw_markers(page)
+  #set_geo_center(page)
+  #page['sidebar_ajax'].replace_html(@html)
+  
+

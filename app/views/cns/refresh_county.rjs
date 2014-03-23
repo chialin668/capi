@@ -1,0 +1,56 @@
+
+=begin
+
+Issues:
+  Mendocino and Inyo, H, Top-10: not centered
+  Mono, H, top-10: only 1 and 8s?
+  Trinity shows only 1,2,3,5
+  sonoma
+  mercede, mendocino: scale level is not correct
+  state top-10/top-50 only shows kennedy but not miller on sidebar (because of hash)
+  eldorado doen't have all marks on top-10
+=end 
+
+url_base="http://www.ifansee.com"
+api_app_base="/capi"
+
+title = "<h1>#{@county_name} County</h1>"
+tagline = ""
+
+@map = Variable.new("map")
+page << @map.clear_overlays
+
+# County boundary
+draw_polygons(page, @polygons)
+
+marker_not_found=false
+html, tagline, marker_not_found = county_draw_markers(page)
+
+mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>"
+html += mnf_symbol_str if marker_not_found
+
+set_geo_center(page) 
+
+page['pageHeader'].replace_html(title + tagline)
+page['sidebar_ajax'].replace_html(html)
+
+# Legend
+draw_legend(page)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

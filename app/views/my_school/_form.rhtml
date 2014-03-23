@@ -1,0 +1,101 @@
+<%= error_messages_for 'my_school' %>
+
+<div id='my_list'>
+	<p><label for="my_school_school_type">School Type:</label><br/>
+	<%=	
+		if @my_school then
+			school_type=@my_school.school_type 
+		elsif params[:my_school] 
+	        school_type = params[:my_school][:school_type] 
+		end
+
+		myparams="Form.Element.serialize('my_school_school_type')"
+		select(:my_school,
+				:school_type,
+				[ ['<Please Chose>', ''],
+				  ['High', 'H'],
+				  ['Middle', 'M'],
+				  ['Elementary', 'E'] ],
+				{:selected=>school_type},
+                {:onchange => remote_function(:update => 'my_list',
+                                        :url => { :action => :add_item },       
+                                        :with => myparams) }
+        )
+	%>		
+	
+	<p><label for="my_school_county_name">County name:</label><br/>
+	<%= 
+
+	if school_type != nil then
+
+		if @my_school
+			county_name = @my_school.county_name 
+		elsif params[:my_school]
+	        county_name = params[:my_school][:county_name] 
+		end
+
+		myparams="Form.Element.serialize('my_school_school_type')+'&'+Form.Element.serialize('my_school_county_name')"
+		counties=ApiGrowth.get_counties school_type
+        select(:my_school,
+                :county_name,
+                counties,
+                {:selected=>county_name},
+                {:onchange => remote_function(:update => 'my_list',
+                                        :url => { :action => :add_item },       
+                                        :with => myparams) }
+        )
+	end
+	%>
+
+	<p><label for="my_school_district_name">District name:</label><br/>
+	<%=
+	
+	if county_name != nil then
+		district_name = @my_school.district_name  if @my_school
+    	district_name = params[:my_school][:district_name] if params[:my_school]
+
+		districts=ApiGrowth.get_district_by_county_name school_type, county_name
+		if districts.length==1 then
+
+			schools=ApiGrowth.get_school_by_county_district county_name, district_name
+			select(:my_school,
+					:school_name,
+					schools
+			)
+
+		else
+
+			myparams="Form.Element.serialize('my_school_school_type')+'&'+Form.Element.serialize('my_school_district_name')+'&'+Form.Element.serialize('my_school_county_name')"
+	        select(:my_school,
+	                :district_name,
+	                districts,
+	                {:selected=>district_name},
+	                {:onchange => remote_function(:update => 'my_list',
+	                                        :url => { :action => :add_item },       
+	                                        :with => myparams) }
+	        )		
+		end
+	end
+
+	%>
+
+	<p><label for="my_school_school_name">School name:</label><br/>
+
+	<%=
+	if county_name != nil && district_name != nil then
+		if @my_school then 
+			school_name = @my_school.school_name 
+		elsif params[:my_school]
+	    	school_name = params[:my_school][:school_name] 
+		end
+
+		schools=ApiGrowth.get_school_by_county_district school_type, county_name, district_name
+		select(:my_school,
+				:school_name,
+				schools,
+				{:selected=>school_name}
+			)
+	end
+	%>
+
+</div>

@@ -1,0 +1,43 @@
+<%= hidden_field_tag :html_type, 'ajax' %>
+
+<%
+	ajax_params="'county_id='+ escape($('county_id').value) " +
+			"+ '&html_type='+ escape($('html_type').value)" 
+%>
+
+
+<table>
+
+<tr>
+<td>
+	<%= 
+		
+		select_tag(:county_id, options_for_select(IfsCounty.get_county_names(@state_id)), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => :refresh_county},
+								:with => ajax_params)) 
+	%>
+</td>	
+</tr>
+
+<tr>
+<td>
+	<%=
+		type=['Number Listed','Median Price', 'Average Price']
+		select_tag(:type, options_for_select(type), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => :refresh_county},
+								:with => ajax_params)) 
+		
+	%>
+</td>
+</tr>
+
+</table>
+
+<hr>
+
+<div id='sidebar_ajax'>
+
+</div>
+

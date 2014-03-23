@@ -1,0 +1,25 @@
+<%= hidden_field_tag :html_type, 'ajax' %>
+
+<%
+	ajax_params="'state_id='+ escape($('state_id').value) " +
+			"+ '&html_type='+ escape($('html_type').value)" 
+%>
+
+
+
+
+Choose a State:
+<%= select_tag(:state_id, options_for_select(IfsState.get_state_names), 
+						:onchange=>remote_function(
+							:url =>{:controller => @app_name.downcase, :action => :refresh_state},
+							:with => ajax_params)) 
+%>
+
+<br /><br />
+
+<hr>
+
+<div id='sidebar_ajax'>
+
+</div>
+

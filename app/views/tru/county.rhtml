@@ -1,0 +1,156 @@
+<%
+	ajax_params=
+		"'state_id='+ escape($('state_id').value) " +
+		"+ '&county_id='+ escape($('county_id').value) " +
+		"+ '&show_map='+ escape($('show_map').value) " + 
+		"+ '&year='+ escape($('year').value) " + 
+		"+ '&html_type='+ escape($('html_type').value)" + 
+		"+ '&month='+ escape($('month').value)" + 
+		"+ '&stat_type='+ escape($('stat_type').value)" + 
+		"+ '&record_type='+ escape($('record_type').value)" + 
+		"+ '&bedroom='+ escape($('bedroom').value)" 
+%>
+
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+	<%= hidden_field_tag :show_map, @show_map %>
+	<%= hidden_field_tag :state_id, @state_id %>
+	<%= hidden_field_tag :county_id, @county_id %>
+	<%= hidden_field_tag :stat_type, @stat_type %>
+
+
+	<table>
+	
+	<tr>
+	<td align='right'>Year:</td>	
+	<td>
+		<%= 
+			default_value_arr = ['2009', '2009'] if @year == '2009' 
+			default_value_arr = ['2008', '2008'] if @year == '2008' 
+			default_value_arr = ['2007', '2007'] if @year == '2007'
+			
+			select_tag(:year, options_for_select([['2009', '2009'], ['2008', '2008'], ['2007', '2007']], default_value_arr), 
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+									:update => @ajax_div,
+									:with => ajax_params)) 
+		%>
+	</td>	
+	
+	<td align='right'>Month:</td>	
+	<td>
+		<%= 
+			default_value_arr = ['January', '1'] if @month == '1'
+			default_value_arr = ['February', '2'] if @month == '2'
+			default_value_arr = ['March', '3'] if @month == '3'
+			default_value_arr = ['April', '4'] if @month == '4'
+			default_value_arr = ['May', '5'] if @month == '5'
+			default_value_arr = ['June', '6'] if @month == '6'
+			default_value_arr = ['July', '7'] if @month == '7'
+			default_value_arr = ['August', '8'] if @month == '8'
+			default_value_arr = ['September', '9'] if @month == '9'
+			default_value_arr = ['October', '10'] if @month == '10'
+			default_value_arr = ['November', '11'] if @month == '11'
+			default_value_arr = ['December', '12'] if @month == '12'
+			
+			select_tag(:month, options_for_select([['January', '1'], ['February', '2'], ['March', '3'], ['April', '4'],
+													['May', '5'], ['June', '6'], ['July', '7'], ['August', '8'],
+													['September', '9'], ['October', '10'], ['November', '11'], ['December', '12']
+													], default_value_arr), 
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+									:update => @ajax_div,
+									:with => ajax_params)) 
+		%>
+	</td>	
+	
+	<td align='right'>Type:</td>	
+	<td>
+		<%= 
+			default_value_arr = ['Listed', 'num_listed'] if @record_type == 'num_listed'
+			default_value_arr = ['Median $', 'median_price'] if @record_type == 'median_price'
+			default_value_arr = ['Average $', 'average_price'] if @record_type == 'average_price'
+			
+			select_tag(:record_type, options_for_select([['Listed', 'num_listed'], ['Median $$', 'median_price'], ['Average $$', 'average_price']], default_value_arr), 
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+									:update => @ajax_div,
+									:with => ajax_params)) 
+		%>
+	</td>
+	
+	<td align='right'>Bedroom:</td>
+	<td>
+		<%= 
+			5.downto(1) do |bd| 
+				default_value_arr = [bd.to_s, bd.to_s] if @bedroom == bd.to_s
+			end
+			default_value_arr = ['All', '0'] if @bedroom == '0'
+			
+			select_tag(:bedroom, options_for_select([['All', '0'], ['5','5'], ['4','4'], ['3','3'], ['2','2'], ['1','1']], default_value_arr), 
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+									:update => @ajax_div,
+									:with => ajax_params)) 
+		%>
+	</td>	
+	</tr>
+	
+	</table>
+	
+	<br />
+
+
+	<% if @show_map %>
+	
+		<table cellspacing='0' border='1'>
+			<tr>
+				<td>
+					<%=
+				      @map = GMap.new("map_div")
+				      @map.control_init(:large_map => true, :map_type => true)
+				      @map.center_zoom_init([37.420644, -121.021325], 8) # center of California
+					  @map.div(:width => 670, :height => 550)
+					%>
+				</td>
+			</tr>
+		</table>	
+		
+		<div id='legend_ajax'>
+			<%= draw_tru_legend(nil) %>
+		</div>			
+		
+		<%
+		  draw_polygons(nil, @polygons)	
+		  @html, tagline, marker_not_found = county_draw_markers(nil)
+		  mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>" 
+		  @html += mnf_symbol_str if marker_not_found
+		  set_geo_center(nil)	
+		%>
+		
+	<% else %>			
+		<%= render :partial => "county" %>
+	<% end %>
+
+
+</div>
+
+
+<%
+=begin	
+	#
+	# testing drawing a point
+	#	
+	color2icons = init_color_icons(nil)
+	icon = get_icon(color2icons, 0, 900)
+  	@map.record_init @map.add_overlay(GMarker.new([37.420644, -121.021325],
+	 								:icon => icon,
+	 								:title => 'title', 
+	 								:info_window => 'info'))
+	# testing drawing a polygon
+   	draw_polygons(nil, @polygons)
+=end		
+
+%>

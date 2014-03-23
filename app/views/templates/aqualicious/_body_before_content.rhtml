@@ -1,0 +1,19 @@
+  <div id="gradient"></div>
+  <%= render(:partial => "templates/aqualicious/navigator") %>
+  <div id="container">
+
+    <div id="pageHeader">
+      <h1><%=@title%></h1>
+      <h2><%=@tagline%></h2>
+    </div> <!-- pageHeader -->
+
+	<%= 
+		if @app_name != nil then 
+			dir=@app_name.downcase
+			render(:partial => "templates/aqualicious/#{dir}/sidebar") 
+		end
+	%>
+
+    <div id="contentContainer">
+      <div id="content">
+        <div class="contentSpacer"></div>  

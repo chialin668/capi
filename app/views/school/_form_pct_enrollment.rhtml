@@ -1,0 +1,74 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+<h3>Percent of Enrollments - STAR:</h3>
+	<table>
+		<tr>
+			<td>	
+				<p><label for="test">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2006) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : tests[0][1])
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :pct_enrollment},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+			<% if @year %>
+				<% 
+					@xmlurl="xml_source=#{@app_base}/#{@app_name.downcase}/pct_enrollment_xml?" +
+								"xml_params=" + 
+									"test_id=#{@test_id}|" + 
+									"grade=#{@grade}|" + 
+									"year=#{@year}|" + 
+									"school_type=#{@school_type}|" + 
+									"school_code=#{@school_code}|" +
+									"district_code=#{@district_code}|" + 
+									"county_code=#{@county_code}" 
+				%>
+				<table cellspacing='0' border='1'>
+					<tr>
+						<td>
+						<%= render(:partial => "templates/#{@theme}/chart_obj") %>
+						</td>
+					</tr>
+				</table>
+			<% end %>	
+			</td>
+		</tr>
+	</table>
+<br/>
+<ul>
+	<li>The percentage of enrollment is the number of students with scores divided by the number of students enrolled on the first day of testing. </li>
+	<li>The percentage may exceed 100% due to students who enrolled in a school after the first day of testing and were tested.</li>
+</ul>	
+</div>	
+

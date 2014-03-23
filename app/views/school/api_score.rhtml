@@ -1,0 +1,37 @@
+<!--%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_score_xml"} ) %-->
+
+
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>API Growth Scores:</h3><br/>
+
+	<div id='chart' align='center'>
+		<%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_score_xml"} ) %>
+	</div>	
+	<br/>
+
+<ul>
+	<li>Data Source: California Department of Education (CDE) Web site (http://www.cde.ca.gov/apr/).</li>
+	<li>The API was established by California's Public Schools Accountability Act (PSAA) 
+of 1999s, the Immediate Intervention/Underperforming Schools Program (II/USP), and the Governor's Performance  
+Award (GPA) program.</li>
+
+	<li>The Growth API reports are the second reports included in the Accountability 
+		Progress Reporting (APR) system.</li>
+	<li>API ranges from a low of 200 to a high of 1000.</li>
+	<li>The statewide API performance target for all schools is 800.</li>
+	
+</ul>
+
+
+</div>	
+
+
+

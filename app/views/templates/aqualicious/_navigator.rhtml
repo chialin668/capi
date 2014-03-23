@@ -1,0 +1,28 @@
+
+	  <%
+	  	if session[:user_id] 
+			sign_in_tag="My Profile"
+			user_url="#{@app_base}/my_profile/list"
+		else
+			sign_in_tag="Sign In"
+			user_url="#{@app_base}/user/login"
+		end
+	  %>
+
+<div id="navcontainer">
+<ul>
+  <!--li><a href="/" rel="self"><img src='/images/TangoIconLibrary/tango-icon-theme-0.8.1/22x22/apps/internet-web-browser.png' /></a></li-->
+  <li><a href="/" rel="self"><b><u>iFanSee</u></b></a></li>
+  <li><a href="/" rel="self">General</a></li>
+  <li><a href="/tru/county?show_map=true&state_id=5&county_id=167&year=2008&month=1&bedroom=0&stat_type=city&record_type=median_price" rel="self">Real Estate</a></li>
+  <li><a href="/cns/county?stype=H&county_name=Alameda&mtype=district" rel="self">School</a></li>
+  <li><a href="/" rel="self">Stock</a></li>
+<!--  
+  <li><a href="/cns" rel="self" <%= %Q(id="current" name="current") if @app_name=='CNS' %>>Map</a></li>
+  <li><a href="/api" rel="self" <%= %Q(id="current" name="current") if @app_name=='API' %>>API</a></li>
+  <li><a href="/search" rel="self" <%= %Q(id="current" name="current") if @app_name=='SEARCH' %>>Search</a></li>
+  <li><a href="/about" rel="self" <%= %Q(id="current" name="current") if @app_name=='ABOUT' %>>About</a></li>
+-->  
+
+</ul>
+</div> <!-- navigation -->

@@ -1,0 +1,17 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>API Growth Scores:</h3>
+	<%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_score_xml"} ) %>
+
+	
+</div>	
+
+
+

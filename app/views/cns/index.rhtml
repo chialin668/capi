@@ -1,0 +1,18 @@
+
+<%
+
+url_base="http://www.ifansee.com"
+api_app_base="/capi"
+
+
+%>
+
+<br />
+<h3>Find Schools on Google Map:</h3>
+<ul>
+	<li><a href='<%=@app_base%>/cns/state?stype=H&scount=10'>Top 10 Schools in California.</a> </li>
+	<li><a href='<%=@app_base%>/cns/region?stype=H&scount=10&region=SF&mtype=region'>Top 10 Schools in SF/LA Regions.</a></li>
+	<li><a href='<%=@app_base%>/cns/county?stype=H&county_name=Alameda&mtype=district'>Districts and Top 10 Schools in Counties</a>.</li>
+	<li><a href='<%=@app_base%>/cns/county_list?stype=H'>Top Schools in Districts.</a></li>
+</ul>
+

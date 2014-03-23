@@ -1,0 +1,22 @@
+
+if @show_map
+  @map = Variable.new("map") 
+  page << @map.clear_overlays
+
+  title = "<h1>#{@county_name} County</h1>"
+  tagline = ""  
+  
+  draw_polygons(page, @polygons)
+  html, @tagline, marker_not_found =county_draw_markers(page)
+  
+  mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>" 
+  html += mnf_symbol_str if marker_not_found
+  
+  set_geo_center(page)
+  
+  page['pageHeader'].replace_html(title + @tagline)
+  page['sidebar_ajax'].replace_html(html)
+  
+  draw_tru_legend(page)  
+end    
+

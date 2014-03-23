@@ -1,0 +1,33 @@
+
+<html>
+<head></head>
+<body>
+	
+	<h4>Grade: <%=@grade%>, <%=@test_name%></h4>
+	<table cellspacing='0' border='1'>
+	<tr>
+		<th>Rank</th>
+		<th>School Name</th>
+		<th>County Name</th>
+		<th>District Name</th>
+		<th>PAC75</th>
+		<th>TEnroll</th>
+		<th>%Tested</th>		
+	</tr>
+	<%rank=0%>
+	<% for record in @records %> 
+		<tr>
+			<%rank=rank+1%>
+			<td><%=rank%></td>
+			<td><%=record.school_name%> </td>
+			<td><%=record.county_name%></td>
+			<td><%=record.district_name%></td>
+			<td align='right'><%=record.pac75%></td>
+			<td align='right'><%=record.start_reported_enrollment%></td>
+			<td align='right'><%=record.percent_tested%></td>			
+		</tr>
+	<% end %>	
+	</table>
+	
+</body>
+</html>

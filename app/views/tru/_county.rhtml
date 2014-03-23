@@ -1,0 +1,53 @@
+ 
+
+<table cellspacing='0' border='1'>
+<tr>
+	<%= "<th class='zipcode' align='center'>Zipcode</th>" if @stat_type == 'zipcode' %>
+	<th class='city' align='center'>City Name</th>
+	<th class='price' align='center'> - </th>
+</tr>
+
+<% for record in @records %>
+	<tr>
+	<%= "<td>#{record.zipcode}</td>" if @stat_type == 'zipcode' %>	
+	<td><%= record.city%> </td>
+	 <%= "<td align='right'>#{record.data.to_s.gsub(/(.)(?=.{3}+$)/, %q(\1,))}</td>" if @record_type == 'num_listed' %>
+	 <%= "<td align='right'>#{number_to_currency(record.data)}</td>" if @record_type == 'median_price' %>
+	 <%= "<td align='right'>#{number_to_currency(record.data)}</td>" if @record_type == 'average_price' %>
+	</tr>
+<% end %>
+
+</table>
+<br />
+
+<%= 
+	if @record_pages && @record_pages.current.previous
+		link_to 'Previous page', { :page => @record_pages.current.previous, 
+									:state_id => @state_id,
+									:county_id => @county_id,
+									:year => @year, 
+									:month => @month,
+									:bedroom => @bedroom,
+									:stat_type => @stat_type,
+									:record_type => @record_type
+									}  
+	else
+		'Previous page'	 
+	end 
+%> 
+	| 
+<%= if @record_pages && @record_pages.current.next
+		link_to 'Next page', { :page => @record_pages.current.next, 
+									:state_id => @state_id,
+									:county_id => @county_id,
+									:year => @year, 
+									:month => @month,
+									:bedroom => @bedroom,
+									:stat_type => @stat_type,
+									:record_type => @record_type
+								}  
+	else
+		'Next page'	 
+	end 
+%> 
+

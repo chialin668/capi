@@ -1,0 +1,35 @@
+
+<%
+  params="year=#{@year}&school_code=#{@school_code}&district_code=#{@district_code}&county_code=#{@county_code}"
+%>
+
+<div id="sidebarContainer">
+	<div id="sidebar">
+		<div id="sidebar-categories">
+
+<%
+ajax_params=
+	"'school_type='+ escape($('school_type').value) " + 
+	"+ '&html_type='+ escape($('html_type').value)" + 
+	"+ '&year='+ escape($('year').value)" + 
+	"+ '&school_code='+ escape($('school_code').value)" + 
+	"+ '&district_code='+ escape($('district_code').value)" + 
+	"+ '&county_code='+ escape($('county_code').value)"
+%>
+
+<h3>Details:</h3>
+&#164; <%= link_to_remote( "API Scores", :update => "ajax_div", :url => { :controller => 'state', :action => 'api_score'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Mean Scaled Scores", :update => "ajax_div", :url => { :controller => 'state', :action => 'star_summary_mean'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% if School.has_3rd_or_7th_grade?(@school_code) %>
+	&#164; <%= link_to_remote( "PACs", :update => "ajax_div", :url => { :controller => 'state', :action => 'star_summary_pac'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% end %>	
+&#164; <%= link_to_remote( "Performance Levels", :update => "ajax_div", :url => { :controller => 'state', :action => 'star_summary_pct'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "County in State", :update => "ajax_div", :url => { :controller => 'state', :action => 'api_county_in_state'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+
+
+
+		</div>					 
+	</div> <!-- sidebar -->
+
+</div> <!-- sidbarContainer -->
+

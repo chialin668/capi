@@ -1,0 +1,25 @@
+	<% if flash[:notice] then %>
+		<div class="noticeExplanation" id="noticeExplanation">
+	  		<h2>Notice:</h2>
+			<p><%= flash[:notice] %></p>
+		</div>
+	<% flash[:notice]=nil%>
+	<% end %>
+	
+	<% if flash[:warning] then %>
+		<div class="warningExplanation" id="warningExplanation">
+	  		<h2>Warning!</h2>
+			<p><%= flash[:warning] %></p>
+		</div>
+	<% flash[:warning]=nil%>
+	<% end %>
+
+	<% if flash[:error] then %>
+		<div class="errorExplanation" id="errorExplanation">
+	  		<h2>Error!!</h2>
+			<p><%= flash[:error] %></p>
+		</div>
+	<% flash[:error]=nil%>
+	<% end %>
+
+	

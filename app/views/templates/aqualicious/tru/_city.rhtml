@@ -1,0 +1,131 @@
+<%
+	ajax_params=
+		"'state_id='+ escape($('state_id').value) " +
+		"+ '&county_id='+ escape($('county_id').value) " +
+		"+ '&city_id='+ escape($('city_id').value) " +
+		"+ '&show_map='+ escape($('show_map').value) " + 
+		"+ '&year='+ escape($('year').value) " + 
+		"+ '&html_type='+ escape($('html_type').value)" + 
+		"+ '&month='+ escape($('month').value)" + 
+		"+ '&record_type='+ escape($('record_type').value)" + 
+		"+ '&bedroom='+ escape($('bedroom').value)" 
+%>
+
+
+<table>
+
+<tr>
+<td>Name:</td>	
+<td>
+	<%= 
+
+		city_arr = TruCity.get_city_names_by_county_id(@county_id)
+		city = TruCity.find_by_id(@city_id)
+		default_value_arr = [city.name, @city_id.to_i]
+		select_tag(:city_id, options_for_select(city_arr, default_value_arr),
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+								:update => @ajax_div,
+								:with => ajax_params)) 
+	%>
+</td>	
+</tr>
+
+<tr></tr>
+
+<tr>
+<td>Year:</td>	
+<td>
+	<%= 
+		default_value_arr = ['2008', '2008'] if @year == '2008' 
+		default_value_arr = ['2007', '2007'] if @year == '2007'
+		
+		select_tag(:year, options_for_select([['2008', '2008'], ['2007', '2007']], default_value_arr), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+								:update => @ajax_div,
+								:with => ajax_params)) 
+	%>
+</td>	
+</tr>
+
+<tr></tr>
+
+<tr>
+<td>Month:</td>	
+<td>
+	<%= 
+		default_value_arr = ['January', '1'] if @month == '1'
+		default_value_arr = ['February', '2'] if @month == '2'
+		default_value_arr = ['March', '3'] if @month == '3'
+		default_value_arr = ['April', '4'] if @month == '4'
+		default_value_arr = ['May', '5'] if @month == '5'
+		default_value_arr = ['June', '6'] if @month == '6'
+		default_value_arr = ['July', '7'] if @month == '7'
+		default_value_arr = ['August', '8'] if @month == '8'
+		default_value_arr = ['September', '9'] if @month == '9'
+		default_value_arr = ['October', '10'] if @month == '10'
+		default_value_arr = ['November', '11'] if @month == '11'
+		default_value_arr = ['December', '12'] if @month == '12'
+		
+		select_tag(:month, options_for_select([['January', '1'], ['February', '2'], ['March', '3'], ['April', '4'],
+												['May', '5'], ['June', '6'], ['July', '7'], ['August', '8'],
+												['September', '9'], ['October', '10'], ['November', '11'], ['December', '12']
+												], default_value_arr), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+								:update => @ajax_div,
+								:with => ajax_params)) 
+	%>
+</td>	
+</tr>
+
+<tr></tr>
+
+<tr>
+<td>Type:</td>	
+<td>
+	<%= 
+		default_value_arr = ['Listed', 'num_listed'] if @record_type == 'num_listed'
+		default_value_arr = ['Median $', 'median_price'] if @record_type == 'median_price'
+		default_value_arr = ['Average $', 'average_price'] if @record_type == 'average_price'
+		
+		select_tag(:record_type, options_for_select([['Listed', 'num_listed'], ['Median $$', 'median_price'], ['Average $$', 'average_price']], default_value_arr), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+								:update => @ajax_div,
+								:with => ajax_params)) 
+	%>
+</td>
+</tr>
+
+<tr></tr>
+
+<tr>
+<td>Bedroom:</td>
+<td>
+	<%= 
+		5.downto(1) do |bd| 
+			default_value_arr = [bd.to_s, bd.to_s] if @bedroom == bd.to_s
+		end
+		default_value_arr = ['All', '0'] if @bedroom == '0'
+		
+		select_tag(:bedroom, options_for_select([['All', '0'], ['5','5'], ['4','4'], ['3','3'], ['2','2'], ['1','1']], default_value_arr), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => @refresh_method},
+								:update => @ajax_div,
+								:with => ajax_params)) 
+	%>
+</td>	
+</tr>
+
+</table>
+
+<hr>
+
+<div id='sidebar_ajax'>
+
+	<%= @html %>
+
+</div>
+

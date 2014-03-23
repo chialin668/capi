@@ -1,0 +1,52 @@
+<div id='ajax_div' align='center'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :type, @type %>
+	<%= hidden_field_tag :name, @name %>
+	<%= hidden_field_tag :growth, @growth %>
+	<%= hidden_field_tag :tru_type, @tru_type %>
+
+	<h3>Put some information here!!!:</h3><br/>
+	<%= render(:partial => "templates/#{@theme}/chart_tru", :locals => {:data_method => "state_xml"} ) %>
+	<br />
+
+	<div id='county' align='left'>
+		<h3>Counties:</h3>
+
+		<table>
+		<% counties = TruSummary.get_county_names(@name, @tru_type) %>
+		<%
+			values = []
+			for county in counties
+				values << county.value.to_i
+			end
+			min = values.min
+			max = values.max
+			step = (max - min)/4
+		%>
+		
+		<% rowcount= counties.size/4%>
+		<% 0.upto(rowcount-1) { |x| %>				
+		<tr>
+			<%for i in (0..counties.size-1) %>
+				<% if i%rowcount==x then %>
+				<%
+					display_number = counties[i].value.to_s.gsub(/(.)(?=.{3}+$)/, %q(\1,))
+					value = counties[i].value.to_i
+					style = "style='font-size: 12px;'" if value < min+step
+					style = "style='font-size: 12.5px;'" if value >= min+step  and value < min+step*2
+					style = "style='font-size: 14.5px;'" if value >= min+step*2 and value < min+step*3
+					style = "style='font-size: 16px;'" if value >= min+step*3
+				%>
+				<td width='200'><a href='/summary/county?type=county&name=<%= counties[i].name %>&tru_type=<%=@tru_type%>' <%=style%>><%= counties[i].name %></a>
+					<font size=-2>(<%=  display_number %>)</font><br /></td>
+				<%end%>	
+			<% end %>
+		</tr>
+		<% } %>
+		</table>
+	</div>
+
+
+</div>	

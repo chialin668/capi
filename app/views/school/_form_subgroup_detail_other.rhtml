@@ -1,0 +1,183 @@
+
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>Subgroup Details (<%=@year%>):</h3>
+	
+	<table>
+		<tr>
+			<td>	
+				<p><label for="year">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2006) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : years[0][1])
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :subgroup_detail_other},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		
+		<%
+			yr = @year.gsub(/20/,'')
+			lyr = "%02d" % (yr.to_i-1)
+		%>
+		<tr>
+			<td></td>
+			<td>
+
+				
+				<table cellspacing='0' border='1'>
+					<tr>
+						<th class='state' align='center'></th align='center'>
+						<th class='state' align='center'>Socioeconomically Disadvantaged Students</th align='center'>
+						<th class='state' align='center'>English Learners</th align='center'>
+						<th class='state' align='center'>Students with Disabilities</th align='center'>
+					</tr>
+					<tr>
+						<td align='center'>Number of Tests Included</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_num=='' ? '-' : record.sd_num
+								el_data = record.el_num=='' ? '-' : record.el_num
+								di_data = record.di_num=='' ? '-' : record.di_num
+							%>
+							<td align='center'><%=sd_data%></td align='center'>
+							<td align='center'><%=el_data if @year.to_i%></td align='center'>
+							<td align='center'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+				
+					<tr>
+						<td align='center'>Significant Both Years</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_sig=='' ? '-' : record.sd_sig
+								el_data = record.el_sig=='' ? '-' : record.el_sig
+								di_data = record.di_sig=='' ? '-' : record.di_sig
+							%>
+							<td align='center'><%=sd_data%></td align='center'>
+							<td align='center'><%=el_data%></td align='center'>
+							<td align='center'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+					<tr>
+						<td align='center'><%= @year %> Growth</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_api_yr=='' ? '-' : record.sd_api_yr
+								el_data = record.el_api_yr=='' ? '-' : record.el_api_yr
+								di_data = record.di_api_yr=='' ? '-' : record.di_api_yr
+							%>
+							<td align='center'><%=sd_data%></td align='center'>
+							<td align='center'><%=el_data%></td align='center'>
+							<td align='center'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'><%= @year.to_i-1 %> Base</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_api_lyr=='' ? '-' : record.sd_api_lyr
+								el_data = record.el_api_lyr=='' ? '-' : record.el_api_lyr
+								di_data = record.di_api_lyr=='' ? '-' : record.di_api_lyr
+							%>
+							<td align='center'><%=sd_data%></td align='center'>
+							<td align='center'><%=el_data%></td align='center'>
+							<td align='center'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'>Target</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_targ=='' ? '-' : record.sd_targ
+								el_data = record.el_targ=='' ? '-' : record.el_targ
+								di_data = record.di_targ=='' ? '-' : record.di_targ
+							%>
+							<td align='center' class='api_target_<%=sd_data=='A' ? 'yes' : ''%>'><%=sd_data%></td align='center'>
+							<td align='center' class='api_target_<%=el_data=='A' ? 'yes' : ''%>'><%=el_data%></td align='center'>
+							<td align='center' class='api_target_<%=di_data=='A' ? 'yes' : ''%>'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'>Grow</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_grow=='' ? '-' : record.sd_grow
+								el_data = record.el_grow=='' ? '-' : record.el_grow
+								di_data = record.di_grow=='' ? '-' : record.di_grow
+							%>
+							<td align='center' class='<%=sd_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=sd_data%></td align='center'>
+							<td align='center' class='<%=el_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=el_data%></td align='center'>
+							<td align='center' class='<%=di_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'>Met</td>	
+						<% for record in @records %>
+							<%
+								sd_data = record.sd_met=='' ? '-' : record.sd_met
+								el_data = record.el_met=='' ? '-' : record.el_met
+								di_data = record.di_met=='' ? '-' : record.di_met
+							%>
+							<td align='center' class='api_target_<%=sd_data.downcase%>'><%=sd_data%></td align='center'>
+							<td align='center' class='api_target_<%=el_data.downcase%>'><%=el_data%></td align='center'>
+							<td align='center' class='api_target_<%=di_data.downcase%>'><%=di_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					
+				</table>
+				<br />
+				
+				<h4>Targets:</h4>
+				<ul>
+				<li>A = Met Interim Performance Target of 800. </li>
+				<li>B= School did not have a valid <%=@year.to_i-1%> API Base and there is no Growth or target information. </li>
+				<li>C = School had significant demographic changes and there is no Growth or target information. </li>
+				<li>D= There is no growth target for Districts or ASAM schools. </li>
+				<li>E = School was an Alternative Schools Accountability Model (ASAM) school in the API Base report and has no target information even though the school is no longer an ASAM school.</li>
+				</ul>
+				
+				
+				
+
+
+
+
+			</td>
+		</tr>
+	</table>
+</div>	
+
+
+

@@ -1,0 +1,24 @@
+
+<%= error_messages_for 'user' %>
+
+<% form_tag :action => 'new' do %>
+		
+	<!--[form:user]-->
+	
+	<p><label for="user_email">Email</label><br/>
+	<%= text_field 'user', 'email'  %></p>
+	
+	<p><label for="verify_email">Verify Email</label><br/>
+	<%= text_field 'verify_user', 'verify_email'  %></p>
+	
+	<p><label for="user_password">Password</label><br/>
+	<%= password_field 'user', 'password'  %></p>
+	
+	<p><label for="verify_password">Verify Password</label><br/>
+	<%= password_field 'verify_user', 'verify_password'  %></p>
+
+	<!--[eoform:user]-->
+
+  <%= submit_tag "Create" %>
+<% end %>
+

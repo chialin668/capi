@@ -1,0 +1,16 @@
+<% has_prfile=MyProfile.find(session[:user_id] %>
+
+<% if  has_profile %>
+	<h2>Add my profile:</h2>
+<% else %>	
+	<h2>Edit my profile:</h2>
+<% end %>
+
+<% form_tag :action => 'create' do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag "Create" %>
+  <br />
+<% end %>
+
+<br />
+<%= link_to 'Back', :action => 'list' %>

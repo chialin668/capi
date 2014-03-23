@@ -1,0 +1,151 @@
+
+
+<div id='ajax_div'>
+	<h3>API Detail:</h3>
+	
+ 	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<table>
+		<tr>
+			<td>	
+				<p><label for="year">Year:</label>
+			</td>
+			<td>
+				<%=
+
+					years=[]
+					@current_year.to_i.downto(2004) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : years[0][1])
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :api_detail},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		
+		<%
+			yr = @year.gsub(/20/,'')
+			lyr = "%02d" % (yr.to_i-1)
+		%>
+		<tr>
+			<td></td>
+			<td>
+
+				<table cellspacing='0' border='1'>
+					<tr>
+						<th class='state' align='center'>Tested</th align='center'>
+						<th class='state' align='center'>Valid</th align='center'>
+						<th class='state' align='center'>API<%=yr%></th align='center'>
+						<th class='state' align='center'>API<%=lyr%></th align='center'>
+						<th class='state' align='center'>Target</th align='center'>
+						<th class='state' align='center'>Growth</th align='center'>
+						<th class='state' align='center'>School Wide</th align='center'>
+						<th class='state' align='center'>Comp Imp</th align='center'>
+						<th class='state' align='center'>Both Targets</th align='center'>
+					</tr>
+					<tr>
+						<% for record in @records %>
+							<%
+								tested = record.tested == '' ? '-' : record.tested
+								valid = record.valid == '' ? '-' : record.valid
+								api_yr = record.api_yr == '' ? '-' : record.api_yr
+								api_lyr = record.api_lyr == '' ? '-' : record.api_lyr
+								target = record.target == '' ? '-' : record.target
+								growth = record.growth == '' ? '-' : record.growth
+								sch_wide = record.sch_wide == '' ? '-' : record.sch_wide
+								comp_imp = record.comp_imp == '' ? '-' : record.comp_imp
+								both_targets = record.both_targets == '' ? '-' : record.both_targets
+							%>						
+							<td align='center'><%= tested %></td>	
+							<td align='center'><%= valid %></td>	
+							<td align='center'><%= api_yr %></td>	
+							<td align='center'><%= api_lyr %></td>	
+							<td align='center' class='api_target_<%=target=='A' ? 'yes' : ''%>'><%= target %></td>	
+							<td align='center' class='<%=growth.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%= growth %></td>	
+							<td align='center' class='api_target_<%=sch_wide.downcase%>'><%= sch_wide %></td>	
+							<td align='center' class='api_target_<%=comp_imp.downcase%>'><%= comp_imp %></td>	
+							<td align='center' class='api_target_<%=both_targets.downcase%>'><%= both_targets %></td>	
+						<% end %>
+					</tr>
+				
+				</table>
+				<br />
+				
+				<h4>Tested:</h4>
+				<ul>
+					<li>Number of Students tested.</li>	
+				</ul>
+				
+				<h4>Valid:</h4>
+				<ul>
+					<li>Number of Scores included in the this year's Academic Performance Index (API).</li>
+				</ul>
+				
+				<h4>API<%=yr%>:</h4>
+				<ul>
+					<li><%= @year %> API (Growth).</li>
+				</ul>
+				
+				<h4>API<%=lyr%>:</h4>
+				A school's API Base is subtracted from its API Growth to determine how much the school improved in a year. 
+				 
+				<ul>
+					<li><%=@year.to_i-1%> API (Base).</li>
+					<li>B= School did not have a valid 2006 API Base and there is no Growth or target information.</li>
+					<li>C = School had significant demographic changes and there is no Growth or target information</li>
+				</ul>
+				
+				<h4>Target:</h4>
+				<ul>
+					<li>A = Met Interim Performance Target of 800. </li>
+					<li>B= School did not have a valid 2006 API Base and there is no Growth or target information. </li>
+					<li>C = School had significant demographic changes and there is no Growth or target information. </li>
+					<li>D= There is no growth target for Districts or ASAM schools.</li> 
+					<li>E = School was an Alternative Schools Accountability Model (ASAM) school in the API Base report and has no target information even though the school is no longer an ASAM school. </li>
+				</ul>
+				
+				
+				<h4>Growth:</h4>
+				A school's growth is measured by how well it is moving toward or past that goal.  The minimum 
+				growth target is five points until the school or subgroup API approaches 800.				  
+				<ul>
+					<li>2006~2007 API Growth.</li>
+					<li>B= School did not have a valid 2006 API Base and there is no Growth or target information.</li>
+					<li>C = School had significant demographic changes and there is no Growth or target information.</li>
+				</ul>
+				
+				
+				<h4>Met School-wide Growth Target.</h4>
+				<h4>Met Comparable Improvement (CI) Target.</h4>
+				<h4>Met both School-wide/CI Target.</h4>
+
+
+
+			</td>
+		</tr>
+	</table>
+</div>	
+
+
+

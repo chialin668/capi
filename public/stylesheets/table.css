@@ -1,0 +1,144 @@
+a.table:hover, a.table:active {
+	/*text-decoration: none;*/
+	background: #9ACD32; 
+	/*font-weight:bold; */
+	color: red;
+}
+
+
+.api_target_yes {
+/*	text-decoration: none;*/
+	color: blue;
+}
+
+.api_target_no {
+	color: red;
+}
+
+.api_growth_positive {
+	text-decoration: none;
+}
+
+.api_growth_netative {
+	color: red;
+}
+
+.rank {
+	background:#ffddff;
+	width: 30px;
+}
+
+.state {
+	background:#ffddff;
+	width: 100px;
+}
+
+.school {
+	background:#ffddff;
+	width: 280px;
+}
+
+.district {
+	background:#ffddff;
+	width: 250px;	
+}
+
+.county {
+	background:#ffddff;
+	width: 150px;	
+}
+
+.city {
+	background:#ffddff;
+	width: 200px;	
+}
+
+.zipcode {
+	background:#ffddff;
+	width: 100px;	
+}
+
+.price {
+	background:#ffddff;
+	width: 80px;
+}
+
+.number {
+	background:#ffddff;
+	width: 80px;
+}
+
+.score {
+	background:#ffddff;
+	width: 50px;
+}
+
+.avg {
+	background:#ffddff;
+	width: 50px;
+}
+
+.prof {
+	background:#ffddff;
+	width: 50px;
+}
+
+.total {
+	background:#ffddff;
+	width: 50px;
+}
+
+.tenroll {
+	background:#ffddff;
+	width: 50px;
+}
+
+.pac75 {
+	background:#ffddff;
+	width: 50px;
+}
+
+.pct_tested {
+	background:#ffddff;
+	width: 50px;
+}
+
+.my_school {
+	color: #990000;
+	background:#ffffff;
+}
+
+.not_my_school {
+	background:#ffffff;
+	width: 50px;
+}
+
+
+
+
+/************ my_school ************/
+
+.table_header {
+	background:#ffeedd;	
+	text-align: center;
+}
+
+.school_type {
+	background:#ffeedd;	
+}
+
+.county_name {
+	background:#ffeedd;	
+	width: 100px;
+}
+
+.district_name {
+	background:#ffeedd;	
+	width: 200px;
+}
+
+.school_name {
+	background:#ffeedd;	
+	width: 300px;
+}
+

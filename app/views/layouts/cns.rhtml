@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>California Public School Rankings</title>
+
+  <% controller.action_name %>
+
+  <%= stylesheet_link_tag 'scaffold' %>
+
+  <%= render(:partial => "templates/#{@theme}/meta") %>
+  <%= render(:partial => "templates/#{@theme}/stylesheet") %>
+  <%= render(:partial => "templates/#{@theme}/script") %>
+
+    <%= javascript_include_tag "prototype" %>
+
+    <%= GMap.header %>
+    <%= @map.to_html if @map%>
+
+</head>
+
+<body>
+
+  	<%= render(:partial => "templates/#{@theme}/body_before_content") if @html_type != 'ajax' %>
+
+  	<%= render(:partial => "templates/#{@theme}/message") if @html_type != 'ajax' %>
+
+	<%= yield  %>
+
+	<%= render(:partial => "templates/#{@theme}/body_after_content") if @html_type != 'ajax' %> 
+
+
+</body>
+</html>

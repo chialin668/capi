@@ -1,0 +1,5 @@
+
+conf/router.rb define what the home page is:
+
+  map.connect '', :controller => "api"
+

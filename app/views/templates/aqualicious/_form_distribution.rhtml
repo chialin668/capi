@@ -1,0 +1,114 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<table>
+
+		<tr>
+			<td>
+				<label for="grade">Grade:</label>	
+			</td>
+			<td>
+				<%=	
+					found_grade=false
+					grades=School.get_grades(@school_code)
+					grade_arr=[]
+					for g in grades
+						found_grade = true if params[:grade].to_i==g.grade.to_i
+						arr = [g.grade, g.grade] if g.grade.to_i != 13
+						arr = ['EOC', g.grade] if g.grade.to_i == 13
+						grade_arr << arr
+					end
+
+					# default value
+					if params[:grade] and found_grade
+			        	@grade = params[:grade]
+					else 
+						if grades.length > 0
+							@grade=grades[0].grade
+						else
+							@grade=0
+						end
+					end
+
+					select_tag(:grade, options_for_select(grade_arr, @grade))
+				%>
+				<%=  
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&grade='+ escape($('grade').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+					observe_field(:grade,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :star_distribution},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>		
+			</td>
+		</tr>
+	
+		<tr>
+			<td>	
+				<p><label for="test">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2004) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : years[0].year)
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :star_distribution},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+			<% if @grade && @year %>
+				<% 
+					@xmlurl="xml_source=#{@app_base}/#{@app_name.downcase}/distribution_value_xml?" +
+								"xml_params=" + 
+									"test_id=#{@test_id}|" + 
+									"grade=#{@grade}|" + 
+									"year=#{@year}|" + 
+									"school_code=#{@school_code}|" +
+									"district_code=#{@district_code}|" + 
+									"county_code=#{@county_code}" 
+				%>
+				<table cellspacing='0' border='1'>
+					<tr>
+						<td>
+						<%= render(:partial => "templates/#{@theme}/chart_obj") %>
+						</td>
+					</tr>
+				</table>
+			<% end %>	
+			</td>
+		</tr>
+	</table>
+</div>	
+

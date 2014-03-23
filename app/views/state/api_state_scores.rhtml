@@ -1,0 +1,29 @@
+
+<table cellspacing='0' border='1'><tr><td>
+
+	<%xmlurl=%Q(xml_source=#{@app_base}/state/api_state_scores_xml?xml_params=year=#{@year}|school_type=#{@school_type}|school_code=#{@school_code}|district_code=#{@district_code}|county_code=#{@county_code})%>
+	
+	<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+		        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+		        WIDTH="400"
+		        HEIGHT="300"
+		        id="charts"
+		        ALIGN="">
+			<PARAM NAME=movie VALUE="/charts/charts.swf?library_path=/charts/charts_library&<%=xmlurl%>">
+			<PARAM NAME=quality VALUE=high>
+			<PARAM NAME=bgcolor VALUE=#666666>
+		
+		<EMBED src="/charts/charts.swf?library_path=/charts/charts_library&<%=xmlurl%>"
+		       quality=high
+		       bgcolor=#DDDDDD
+		       WIDTH="400"
+		       HEIGHT="300"
+		       NAME="charts"
+		       ALIGN=""
+		       swLiveConnect="true"
+		       TYPE="application/x-shockwave-flash"
+		       PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer">
+		</EMBED>
+	</OBJECT>
+
+	</table>

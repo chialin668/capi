@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  
+  <%
+  	school_type='High' if @school_type=='H'
+  	school_type='Middle' if @school_type=='M'
+  	school_type='Elementary' if @school_type=='E'
+  %>
+  <title>API Rankings of <%=school_type%> Schools in California</title>
+
+  <%= stylesheet_link_tag 'scaffold' %>
+
+  <%= render(:partial => "templates/#{@theme}/meta") %>
+  <%= render(:partial => "templates/#{@theme}/stylesheet") %>
+  <%= render(:partial => "templates/#{@theme}/script") %>
+
+</head>
+<body>
+
+  	<%= render(:partial => "templates/#{@theme}/body_before_content") %>
+
+	<%= yield  %>
+
+	<%= render(:partial => "templates/#{@theme}/body_after_content") %>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= render :partial => "table_#{@stat_type}" %>
+
+
+	<%= if @record_pages.current.previous
+			link_to 'Previous page', { :page => @record_pages.current.previous , 
+										:year => @year, 
+										:month => @month,
+										:bedroom => @bedroom,
+										:stat_type => @stat_type,
+										:record_type => @record_type
+										}  
+		else
+			'Previous page'	 
+		end 
+	%> 
+		| 
+	<%= if @record_pages.current.next
+			link_to 'Next page', { :page => @record_pages.current.next, 
+									:year=>@year, 
+										:month => @month,
+										:bedroom => @bedroom,
+										:stat_type => @stat_type,
+										:record_type => @record_type
+									}  
+		else
+			'Next page'	 
+		end 
+	%> 
+
+</div>	

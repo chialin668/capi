@@ -1,0 +1,124 @@
+<%= render(:partial => "templates/#{@theme}/message") %>
+			
+		<h2>High Schools:</h2>
+
+		<table cellspacing='0' border='1'>
+		<tr>
+			<th class='rank' align='center'>Rank</th>
+			<th class='school' align='center'>School Name</th>
+			<th class='district' align='center'>District Name</th>
+			<th class='county' align='center'>County Name</th>
+			<th class='score' align='center'>Score</th>
+		</tr>
+		<% for record in @hrecords %> 
+			<tr>
+				<td align='center'><%=record.state_rank%></td>
+				<td ><%=record.school_name%> </td>
+				<td><%=record.district_name%></td>
+				<td><%=record.county_name%></td>
+				<td align='center'><%=record.api_score%></td>
+			</tr>
+		<% end %>	
+		</table>
+		<br />
+
+
+		<h2>Middle Schools:</h2>
+
+		<table cellspacing='0' border='1'>
+		<tr>
+			<th class='rank' align='center'>Rank</th>
+			<th class='school' align='center'>School Name</th>
+			<th class='district' align='center'>District Name</th>
+			<th class='county' align='center'>County Name</th>
+			<th class='score' align='center'>Score</th>
+		</tr>
+		<% for record in @mrecords %> 
+			<tr>
+				<td align='center'><%=record.state_rank%></td>
+				<td><%=record.school_name%> </td>
+				<td><%=record.district_name%></td>
+				<td><%=record.county_name%></td>
+				<td align='center'><%=record.api_score%></td>
+			</tr>
+		<% end %>	
+		</table>
+		<br />
+
+		<h2>Elementary Schools:</h2>
+		
+
+		<table cellspacing='0' border='1'>
+		<tr>
+			<th class='rank' align='center'>Rank</th>
+			<th class='school' align='center'>School Name</th>
+			<th class='district' align='center'>District Name</th>
+			<th class='county' align='center'>County Name</th>
+			<th class='score' align='center'>Score</th>
+		</tr>
+		<% for record in @erecords %> 
+			<tr>
+				<td align='center'><%=record.state_rank%></td>
+				<td><%=record.school_name%> </td>
+				<td><%=record.district_name%></td>
+				<td><%=record.county_name%></td>
+				<td align='center'><%=record.api_score%></td>
+			</tr>
+		<% end %>	
+		</table>
+
+		<br />
+		
+		<table>
+			<tr>
+				<td><b>Year:</b></td>
+				<% if @year=='2008' then %>
+					<td>2008</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2008'>2008</a></td>
+				<% end %>
+				
+				<% if @year=='2007' then %>
+					<td>2007</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2007'>2007</a></td>
+				<% end %>
+				
+				<% if @year=='2006' then %>
+					<td>2006</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2006'>2006</a></td>
+				<% end %>
+				
+				<% if @year=='2005' then %>
+					<td>2005</td>
+				<% else %>				
+					<td><a href='<%=@app_base%>/api?year=2005'>2005</a></td>
+				<% end %>
+				
+				<% if @year=='2004' then %>
+					<td>2004</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2004'>2004</a></td>
+				<% end %>
+				
+				<% if @year=='2003' then %>
+					<td>2003</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2003'>2003</a></td>
+				<% end %>
+				
+				<% if @year=='2002' then %>
+					<td>2002</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2002'>2002</a></td>
+				<% end %>
+				
+				<% if @year=='2001' then %>
+					<td>2001</td>
+				<% else %>
+					<td><a href='<%=@app_base%>/api?year=2001'>2001</a></td>
+				<% end %>
+			</tr>
+		</table>
+		<br />

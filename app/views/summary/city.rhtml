@@ -1,0 +1,19 @@
+<div id='ajax_div' align='center'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :type, @type %>
+	<%= hidden_field_tag :name, @name %>
+	<%= hidden_field_tag :growth, @growth %>
+	<%= hidden_field_tag :tru_type, @tru_type %>
+
+	<h3>Put some information here!!!:</h3><br/>
+	<%= render(:partial => "templates/#{@theme}/chart_tru", :locals => {:data_method => "city_xml"} ) %>
+	<br />
+
+	<div id='city' align='left'>
+
+	</div>
+
+
+</div>	

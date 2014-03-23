@@ -1,0 +1,30 @@
+
+
+<!--%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_all_scores_xml"} ) %-->
+
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>API Scores (school/district/county/state):</h3><br/>
+	<div id='chart' align='center'>
+		<%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_all_scores_xml"} ) %>
+	</div>	
+	<br />
+	
+<ul>
+	<li>Compare scores to district, county, and state.</li>
+</ul>	
+</div>	
+
+
+
+
+

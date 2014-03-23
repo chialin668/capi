@@ -1,0 +1,86 @@
+
+<%
+  params="year=#{@year}&school_code=#{@school_code}&district_code=#{@district_code}&county_code=#{@county_code}"
+%>
+
+<div id="sidebarContainer">
+	<div id="sidebar">
+		<div id="sidebar-categories">
+			<%
+			ajax_params=
+				"'school_type='+ escape($('school_type').value) " + 
+				"+ '&html_type='+ escape($('html_type').value)" + 
+				"+ '&year='+ escape($('year').value)" + 
+				"+ '&school_code='+ escape($('school_code').value)" + 
+				"+ '&district_code='+ escape($('district_code').value)" + 
+				"+ '&county_code='+ escape($('county_code').value)"
+			%>
+			
+<h3>Details:</h3>
+&#164; <%= link_to_remote( "API Scores", :update => "ajax_div", :url => { :controller => 'county', :action => 'api_score'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Mean Scaled Scores", :update => "ajax_div", :url => { :controller => 'county', :action => 'star_summary_mean'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% if School.has_3rd_or_7th_grade?(@school_code) %>
+	&#164; <%= link_to_remote( "PACs", :update => "ajax_div", :url => { :controller => 'county', :action => 'star_summary_pac'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% end %>
+&#164; <%= link_to_remote( "Performance Levels", :update => "ajax_div", :url => { :controller => 'county', :action => 'star_summary_pct'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "District in County", :update => "ajax_div", :url => { :controller => 'county', :action => 'api_district_in_county'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<br />
+
+<h3>Map:</h3>
+&#164; <a href="/cns/county?stype=<%=@school_type%>&county_name=<%=@county_name%>&mtype=district">Show District Locationss</a><br />
+&#164; <a href="/cns/county?stype=<%=@school_type%>&county_name=<%=@county_name%>&mtype=county">School(s) in County Top-10</a><br />
+&#164; <a href="/cns/county?stype=<%=@school_type%>&county_name=<%=@county_name%>&mtype=state">School(s) in State Top-50</a><br />
+
+
+<br />
+
+&#164; <a href='/county/map?school_type=<%=@school_type%>&html_type=<%=@html_type%>&year=<%=@year%>&school_code=<%=@school_code%>&district_code=<%=@district_code%>&county_code=<%=@county_code%>'>Show Map</a> <br />
+
+
+&#164; 
+<% 
+	link_params = "'stype=H'" + 
+				"+ '&show_map=true'" + 
+				"+ '&html_type='+ escape($('html_type').value)" + 
+				"+ '&year='+ escape($('year').value)" + 
+				"+ '&county_code='+ escape($('county_code').value)" + 
+				"+ '&school_code='+ escape($('school_code').value)" + 
+				"+ '&district_code='+ escape($('district_code').value)" + 
+				"+ '&mtype=district'"
+%>
+
+<%=
+	link_to_remote( "Test", :url => { :controller => 'cns', :action => 'refresh_county'}, 
+							:with => link_params) 
+
+%><br/>
+
+
+
+<br />
+
+<h3>Real Estate Trends</h3>
+&#164; <a href="/summary/county?type=county&name=<%=@county_name%>&tru_type=listed">Number Listed</a><br />
+&#164; <a href="/summary/county?type=county&name=<%=@county_name%>&tru_type=median">Median Price</a><br />
+&#164; <a href="/summary/county?type=county&name=<%=@county_name%>&tru_type=average">Average Price</a><br />
+
+<br /><br />
+
+[<A HREF="javascript:javascript:history.go(-1)">Back</A>]
+
+
+
+<div id='sidebar_ajax'>
+
+	<%= @html %>
+	
+</div>
+
+
+				
+		</div>					 
+	</div> <!-- sidebar -->
+
+</div> <!-- sidbarContainer -->
+
+

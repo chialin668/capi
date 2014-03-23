@@ -1,0 +1,25 @@
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<table cellspacing='0' border='1'>
+		<tr>
+			<td>
+				<%=
+			      @map = GMap.new("map_div")
+			      @map.control_init(:large_map => true, :map_type => true)
+			      @map.center_zoom_init([37.420644, -121.021325], 8) # center of California
+				  load_markers(@map)
+				  color2icons = init_color_icons(nil)
+
+				  @map.div(:width => 670, :height => 550)
+				%>
+			</td>
+		</tr>
+	</table>		
+	
+	
+	
+</div>
+

@@ -1,0 +1,18 @@
+<% has_profile=MyProfile.find_by_user_id(session[:user_id]) %>
+
+<% if has_profile then %>
+	<h2>Edit my profile:</h2>
+	<% tag='Save' %>
+<% else %>	
+	<h2>Create my profile:</h2>
+	<% tag='Create' %>
+<% end %>
+
+<% form_tag :action => 'create' do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag "#{tag}" %>
+  <br />
+<% end %>
+
+<br />
+<%= link_to 'Back', :action => 'list' %>

@@ -1,0 +1,68 @@
+<%= error_messages_for 'my_school' %>
+
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<table>
+		<tr>
+			<td><label for="school_code">School:</label></td>
+			<td>
+				<%=	
+			        found_code = false;
+					@school_code = params[:school_code] 
+					school_codes=District.get_schools(@school_type, @district_code)
+					school_code_arr=[]
+					school_codes.each do |g|
+					  found_code = true if @school_code.to_i==g.school_code.to_i
+					  arr = [g.school_name, g.school_code ]
+					  school_code_arr << arr
+					end
+
+					@school_code=school_code_arr[0][1] if not found_code
+
+					select_tag(:school_code, options_for_select(school_code_arr, @school_code.to_i))
+				%>	
+				<%= 
+					# "'section='+ escape($('section').value) + '&search=' + escape(value)"
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+					observe_field(:school_code,
+								     :url => {:action => :api_school_in_district},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+	 
+			</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td>
+				<%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_school_in_district_xml"} ) %>						
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+				<%
+				  params="school_type=#{@school_type}&year=#{@year}&school_code=#{@school_code}&district_code=#{@district_code}&county_code=#{@county_code}"
+				%>
+				
+				Go to: <a href='<%=@app_base%>/school/api_score?<%=params%>'><%=@school_name%></a><br />
+			</td>
+		</tr>
+	</table>
+
+	
+	
+</div>	
+

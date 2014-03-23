@@ -1,0 +1,49 @@
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>API Growth Ranks:</h3><br/>
+	
+	<table cellspacing='0' border='1'>
+		<tr>
+			<th class='rank' align='center'>Year</th align='center'>
+			<th class='state' align='center'>State/Total</th align='center'>
+			<th class='county' align='center'>County/Total</th align='center'>
+			<th class='district' align='center'>District/Total</th align='center'>
+		</tr>
+
+	    <% @current_year.to_i.downto(2001) do |year| %>
+		    <% h=@year_hash[year.to_s] %>
+	
+			<%
+				state_rank = h[:state_rank]==nil ? '-' : h[:state_rank]
+				county_rank = h[:county_rank]==nil ? '-' : h[:county_rank]
+				district_rank = h[:district_rank]==nil ? '-' : h[:district_rank]
+			%>
+			<tr>
+				<td align='center'><%=year%></td align='center'>
+				<td align='center'><%=state_rank%>/<%=h[:state_count]%></td align='center'>
+				<td align='center'><%=county_rank%>/<%=h[:county_count]%></td align='center'>
+				<td align='center'><%=district_rank%>/<%=h[:district_count]%></td align='center'>
+			</tr>
+	
+	    <% end %>
+
+	</table>
+	<h4>(rank/total school count)</h4>
+<br/>
+
+<ul>
+	<li>Total: Number of schools that have valid API scores in state, county, or district.</li>
+</ul>
+</div>	
+
+
+
+	

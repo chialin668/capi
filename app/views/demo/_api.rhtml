@@ -1,0 +1,12 @@
+
+<h2>Lee Middle School</h2>
+<h4>Woodland Joint Unified, Yolo County</h4>
+<br />
+<%= render(:partial => "templates/#{@theme}/chart", :locals => {:data_method => "api_score_xml"} ) %>
+(API Scores)
+<br /><br /><br />
+
+Also available: Compare API scores/trends to district, county, and state.
+<br /><br />
+
+For your school, please click <a href='<%=@app_base%>/search'>here</a>.

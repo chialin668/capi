@@ -1,0 +1,31 @@
+<% 
+	@counties=ApiGrowth.get_county_names
+	county_names=[]
+	name2cds={}
+	for county in @counties
+		county_names << county.county_name
+		district_cds= "%02d%05d0000000" % [county.county_code, county.district_code]
+		name2cds[county.county_name] = district_cds
+	end
+%>
+	
+<h3>Please Choose a County:</h3>
+
+<table>
+	<% rowcount=15 %>
+	<% 0.upto(rowcount-1) { |x| %>				
+	<tr>
+		<%for i in (0..county_names.size) %>
+			<% if i%rowcount==x then %>
+			<td width='200'><%= %Q(<a href='#{@app_base}/cns/district?stype=H&county_name=#{county_names[i]}&district_cds=#{name2cds[county_names[i]]}'>#{county_names[i]}) %></td>
+			<%end%>	
+		<% end %>
+	</tr>
+	<% } %>
+					
+</table>
+
+
+
+
+

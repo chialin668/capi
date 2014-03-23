@@ -1,0 +1,203 @@
+<h3>Search Results:</h3>
+<%= 
+	# header information
+	if @search_type == 'city'
+		city_name = @query.split(/\s+/).each{ |word| word.capitalize! }.join(' ')
+		criteria_str = "Schools in: #{city_name}..... <br />"
+		criteria_str
+	elsif @search_type == 'district'
+		#
+	elsif @search_type == 'zip' or @search_type == 'address'
+		criteria_str = "Schools Near: #{@query}..... <br />"
+		criteria_str
+	end
+%>
+<br />
+
+<% if @show_map %>
+	<table cellspacing='0' border='1'>
+		<tr>
+			<td>
+				<%= 
+					@map = GMap.new("map_div")
+					@map.control_init(:large_map => true, :map_type => true)
+					@map.center_zoom_init([37.350408, -122.056942], 10) # center of California
+					load_markers(@map)
+					
+					@map.icon_global_init(GIcon.new(:image => "#{@app_base}/images/icons/misc/building.png",                           
+					                            :icon_size => GSize.new(20,34),
+					                            :icon_anchor => GPoint.new(12,34),
+					                            :shadow => "#{@app_base}/images/icons/misc/shadow.png",
+					                            :shadow_size => GSize.new(37,34),
+					                            :info_window_anchor => GPoint.new(9,2)), 
+					                            "geocenter")    
+					
+					@map.div(:width => 670, :height => 550) 
+				%>
+			</td>
+		</tr>
+	</table>		
+
+	<div id='legend_ajax'>
+		<%= draw_legend(nil) %>
+	</div>
+
+	<%
+		# input query criteria  -> geo center
+		icon = Variable.new("geocenter") 
+
+	  	@map.record_init @map.add_overlay(GMarker.new([@geocenter[:lat], @geocenter[:lng]],
+										:icon => icon,
+										:title => @query, 
+										:info_window => @query))
+	%>
+
+	<% 
+		color2icons = init_color_icons(nil)
+	%>
+	
+	<% if @records %>
+		<ul>
+			<% 
+			 	geopoints=[]
+				index = 1
+			%>
+			<% for record in @records %>
+				<% 
+					if @search_type == 'zip' or @search_type == 'address' or @search_type == 'city'
+						# record from GeoKit (ifs_schools table)
+						school_code = record.cds[7,7]
+					else 
+						# record from ferret (api_growths table)
+						school_code = record.school_code
+					end
+	
+					school=ApiGrowth.find_by_school_code_and_year(school_code, @current_year)	
+					icon = get_icon(color2icons, index, school ? school.api_score : nil)
+
+					if school 
+				        sname = school.school_name.length >= 20 ? "#{school.school_name[0..20]}..." : school.school_name
+				        school_name = "<a href='/school/api_score?" +
+				                    "year=#{@current_year}&" +
+				                    "school_type=#{@school_type}&" + 
+				                    "school_code=#{school.school_code}&" +
+				                    "district_code=#{school.district_code}&" + 
+				                    "county_code=#{school.county_code}'>#{sname}</a>" 
+				        address = "#{record.address} <br />" +
+				                "#{record.city}, #{record.state} #{record.zip} <br />"
+				        info = "#{school_name} <br />" + address
+					else 
+						info = "#{record.school_name}<br />"
+					end
+				  	@map.record_init @map.add_overlay(GMarker.new([record.lat, record.lng],
+													:icon => icon,
+													:title => record.school_name, 
+													:info_window => info))
+			       	geopoints << {:lat => record.lat, :lng => record.lng}
+					index = index + 1
+				%>
+			<% end %>	
+		</ul>
+		
+		<% 
+			@map.center_zoom_init(GLatLng.new(find_geo_center(geopoints)), find_scale_level(geopoints)-1) 
+		%>
+	
+	<% end %>	
+
+	<% 
+		# draw_polygons(nil, @polygons) if @search_type == 'zip' 
+
+		# school district polygons
+		colorarray = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#ffff00", "#00ffff", "#00ffff"]
+		i = 0
+		@name2polygons.each_key {|key| 
+			draw_polygons(nil, @name2polygons[key], colorarray[i])
+			i = i + 1 
+		}
+	%>
+
+
+<% end %>
+
+
+
+<% if @records %>
+	<ol>
+		<% 
+		   	geopoints=[]
+			index = 1
+		%>
+		<% for record in @records %>
+			<% 
+				if @search_type == 'zip' or @search_type == 'address' or @search_type == 'city'
+					# record from GeoKit (ifs_schools table)
+					school_code = record.cds[7,7]
+				else 
+					# record from ferret (api_growths table)
+					school_code = record.school_code
+				end
+
+				school=ApiGrowth.find_by_school_code_and_year(school_code, @current_year)	
+					
+			%>
+			<% if school %>
+				<%
+					params="school_type=#{school.school_type}&year=#{school.year}&" + 
+								"school_code=#{school.school_code}&district_code=#{school.district_code}&county_code=#{school.county_code}"
+				%>
+				<li>
+					<% 
+						# distance between criteria and school
+						distance_str = ""
+						if @search_type == 'zip' or @search_type == 'address' 
+							begin
+								distance = "%.2f" % record.distance_from(@query)
+							rescue GeoKit::Geocoders::GeocodeError
+								distance = "-"
+							end
+							distance_str = "[#{distance} Miles] ~ "
+						end
+					%>
+					<%=distance_str%>
+					<a href='<%=@app_base%>/school/api_score?<%=params%>'><%=record.school_name%></a> (API: <%=school.api_score%>),
+										<a href='<%=@app_base%>/district/api_score?<%=params%>'><%=record.district_name%></a>,
+										<a href='<%=@app_base%>/county/api_score?<%=params%>'><%=record.county_name%></a> 
+										
+				</li>
+			<% else %>
+				<li><%=record.school_name%>, <%=record.district_name%>, <%=record.county_name%></li>	
+			<% end %>	
+		<% end %>
+	</ol>
+	
+	<%= 
+	  if @search_type == 'zip' or @search_type == 'address' 
+  		  "<a href='/search/search?"  + 
+			"search_type=#{@search_type}&query=#{@query}&distance=#{@distance}&school_type=#{@school_type}&page=#{@page}&show_map=true'>Map it!</a>" if not @show_map
+	  end
+	%>
+
+	<br />
+		
+	<%= link_to 'Previous', { :page => @pages.current.previous, :school_type => @school_type, 
+								:search_type => @search_type, 
+								:distance => @distance,
+								:api_from => @api_from,
+								:api_to => @api_to,
+								:query => @query} if @pages.current.previous %>
+	<%= pagination_links(@pages, :params => { :school_type => @school_type, 
+								:search_type => @search_type, 
+								:distance => @distance,
+								:api_from => @api_from,
+								:api_to => @api_to,
+								:query => @query }) %>
+	<%= link_to 'Next', { :page => @pages.current.next, :school_type => @school_type, 
+								:search_type => @search_type, 
+								:distance => @distance,
+								:api_from => @api_from,
+								:api_to => @api_to,
+								:query => @query} if @pages.current.next %>
+<% end %>	
+
+

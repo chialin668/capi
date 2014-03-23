@@ -1,0 +1,24 @@
+
+
+<div id="sidebarContainer">
+	<div id="sidebar">
+		<div id="sidebar-categories">
+
+			  <% if @has_result %>
+				  <%= render :partial => "templates/#{@theme}/#{@app_name.downcase}/sidebar_result" %>				  
+			  <% else %>
+				  <%= render :partial => "templates/#{@theme}/#{@app_name.downcase}/form_search" %>
+				  <br />
+				  Example: <br/>
+				  	lynbrook, "monta vista"
+					lynbrook, cupertino
+
+			  <% end %>
+		  
+		</div>					 
+	</div> <!-- sidebar -->
+
+</div> <!-- sidbarContainer -->
+
+
+

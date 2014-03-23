@@ -1,0 +1,10 @@
+
+
+@map = Variable.new("map") 
+page << @map.clear_overlays
+  
+draw_polygons(page, @polygons)
+html = state_draw_markers(page)
+set_geo_center(page)
+  
+page['sidebar_ajax'].replace_html(html)

@@ -1,0 +1,30 @@
+	
+<h2>Please Choose a County:</h2>
+<br />
+
+<table>
+	<% rowcount=15 %>
+	<% 0.upto(rowcount-1) { |x| %>				
+	<tr>
+		<%
+		  for i in (0..@counties.size-1) 
+			if i%rowcount==x then 
+			  county = @counties[i] 
+			  county_name = county[0]
+			  county_id = county[1]
+			  url = %Q(/tru/county?show_map=true&state_id=#{@state_id}&county_id=#{county_id})
+		%>
+			  <td width='200'><a href='<%=url%>'><%=county_name%></a></td>
+		<%
+			end
+		  end 
+		%>
+	</tr>
+	<% } %>
+					
+</table>
+
+
+
+
+

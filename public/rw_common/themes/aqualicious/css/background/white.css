@@ -1,0 +1,8 @@
+body {
+	background-color: #fffff8;
+}
+
+#gradient {
+	background: url(../../images/menu_shadow.png) repeat-x;
+	height: 2px;
+}

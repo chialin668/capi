@@ -1,0 +1,29 @@
+
+
+
+<%
+  params="school_type=#{@school_type}&year=#{@year}&school_code=#{@school_code}&district_code=#{@district_code}&county_code=#{@county_code}"
+%>
+
+<%
+ajax_params=
+	"'school_type='+ escape($('school_type').value) " + 
+	"+ '&html_type='+ escape($('html_type').value)" + 
+	"+ '&year='+ escape($('year').value)" + 
+	"+ '&school_code='+ escape($('school_code').value)"
+%>
+
+<h3>Score Trends:</h3>
+&#164; <%= link_to_remote( "API Scores", :update => "ajax_div", :url => { :controller => @app_name.downcase, :action => 'api_score'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "API Ranks", :update => "ajax_div", :url => { :controller => @app_name.downcase, :action => 'api_rank'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Mean Scaled Scores", :update => "ajax_div", :url => { :controller => @app_name.downcase, :action => 'star_summary_mean'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Performance Levels", :update => "ajax_div", :url => { :controller => @app_name.downcase, :action => 'star_summary_pct'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+
+<% # should be all schools ??????%>
+<% if School.has_3rd_or_7th_grade?(@school_code) %>
+	&#164; <%= link_to_remote( "PAC 75", :update => "ajax_div", :url => { :controller => @app_name.downcase, :action => 'star_summary_pac'}, :with => ajax_params, :update => 'ajax_div') %><br/>
+<% end %>
+
+[<A HREF="javascript:javascript:history.go(-1)">Back</A>]
+
+

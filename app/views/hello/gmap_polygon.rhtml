@@ -1,0 +1,34 @@
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<table cellspacing='0' border='1'>
+		<tr>
+			<td>
+				<%=
+			      @map = GMap.new("map_div")
+			      @map.control_init(:large_map => true, :map_type => true)
+			      @map.center_zoom_init([37.420644, -121.021325], 8) # center of California
+
+				  # draw a polygon
+				  @all_geopoints = []
+				  polygons = []
+				  polygon = [[37.915487, -121.557059],
+								[37.798931, -121.85696],
+								[37.298931, -121.75696],
+								[37.915487, -121.557059]]
+				  polygons << polygon
+				  draw_polygons(nil, polygons)
+
+				  # this line has to be here!!	
+				  @map.div(:width => 670, :height => 550) 
+				%>
+			</td>
+		</tr>
+	</table>		
+	
+	
+	
+</div>
+

@@ -1,0 +1,31 @@
+
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :year, @year %>
+
+	<h3>State API Ranks:</h3><br/>
+	
+	<table cellspacing='0' border='1'>
+	<% for rec in @header_rec %>
+		<tr class='school'>
+		<% for r in rec %>
+			<td align='center' ><%= r %> </td>
+		<% end %>
+		</tr>
+	<% end %>
+		
+	<% for rec in @data_rec %>
+		<tr>
+		<% for r in rec %>
+			<td align='center' ><%= r %> </td>
+		<% end %>
+		</tr>
+	<% end %>
+	</table>	
+	<br />
+	
+	<%= render(:partial => "go_to") %>
+
+</div>

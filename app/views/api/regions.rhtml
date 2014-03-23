@@ -1,0 +1,61 @@
+<%
+@title="San Francisco Bay Area" if @region=='SF'
+@title="Los Angles Area" if @region=='LA'
+@tagline="#{@year} Academic Performance Index"
+%>
+
+<% school_type='High' if @school_type=='H' %>
+<% school_type='Middle' if @school_type=='M' %>
+<% school_type='Elementary' if @school_type=='E' %>
+
+<h2><%= school_type %> Schools: </h2>
+
+<table cellspacing='0' border='1'>
+<tr>
+	<th class='rank' align='center'>Region</th>
+	<th class='rank' align='center'>State</th>
+	<th class='school' align='center'>School Name</th>
+	<th class='district' align='center'>District Name</th>
+	<th class='county' align='center'>County Name</th>
+	<th class='score' align='center'>Score</th>
+</tr>
+
+<% for record in @records %>
+	<%param_string="year=#{@current_year}&school_type=#{@school_type}&school_code=#{record.school_code}&district_code=#{record.district_code}&county_code=#{record.county_code}"%>
+	<% school_name = record.school_name.length <32 ? record.school_name : "#{record.school_name[0,32]}..." %>
+	<tr>
+		<td align='center'><%=record.region_rank%></td>
+		<td align='center'><%=record.state_rank%></td>
+		<td><a href='<%=@app_base%>/school/api_score?<%=param_string%>'><%=school_name%></a></td>
+		<td><a href='<%=@app_base%>/district/api_score?<%=param_string%>'><%=record.district_name%></a></td>
+		<td><a href='<%=@app_base%>/county/api_score?<%=param_string%>'><%=record.county_name%></a></td>
+		<td align='center'><%=record.api_score%></td>
+	</tr>
+<% end %>	
+</table>
+<br />
+
+
+<br />
+<%= if @record_pages.current.previous
+		link_to 'Previous page', { :page => @record_pages.current.previous , 
+									:year=>@year, 
+									:school_type=>@school_type,
+									:region=>@region
+									}  
+	else
+		'Previous page'	 
+	end 
+%> 
+	| 
+<%= if @record_pages.current.next
+		link_to 'Next page', { :page => @record_pages.current.next, 
+									:year=>@year, 
+									:school_type=>@school_type,
+									:region=>@region
+								}  
+	else
+		'Next page'	 
+	end 
+%> 
+	

@@ -1,0 +1,9 @@
+
+<h4>Go To:</h4>
+
+<ul>
+<% for school in @schools %>
+	<% params="year=#{@current_year}&school_type=#{@school_type}&school_code=#{school.school_code}&district_code=#{school.district_code}&county_code=#{school.county_code}" %>
+	<li><a href='<%=@app_base%>/school/api_score?<%=params%>'><%=school.school_name%></a>, <%=school.district_name%>, <%=school.county_name%></li>
+<% end %>
+</ul>

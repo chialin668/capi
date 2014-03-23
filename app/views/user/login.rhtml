@@ -1,0 +1,22 @@
+
+<%= error_messages_for 'user' %>
+		
+<% form_tag :action => 'login' do %>
+		
+	<!--[form:user]-->
+	
+	<p><label for="user_email">Email</label><br/>
+	<%= text_field 'user', 'email'  %></p>
+	
+	<p><label for="user_password">Password</label><br/>
+	<%= password_field 'user', 'password'  %></p>
+	
+	<!--[eoform:user]-->
+
+  <%= submit_tag "Login" %>
+<% end %>
+
+
+<br />
+<br />
+<b><%= link_to "Sign me up.... [Version: Beta 1 (Date: 01/06/08)]", :action => 'new' %></b>

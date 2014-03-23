@@ -1,0 +1,26 @@
+
+
+<div id="sidebarContainer">
+	<div id="sidebar">
+		<div id="sidebar-categories">
+
+			<h3>Search Type:</h3><br />
+	
+			&#164; <a href='/search?search_type=school'>By School Name</a> <br />
+			&#164; <a href='/search?search_type=district'>Schools in District</a><br />
+			&#164; <a href='/search?search_type=city'>Schools in City</a><br />
+			&#164; <a href='/search?search_type=address'>Schools Near Address</a><br />
+			&#164; <a href='/search?search_type=zip'>Schools Near Zip Code</a><br />
+			&#164; <a href='/search?search_type=api'>By API Score</a><br />
+			&#164; <a href='/search?search_type=advanced'>Advanced Search</a><br />		
+
+			<br />			
+			<%= "[<A HREF='javascript:javascript:history.go(-1)'>Back</A>]" if @search_type %>
+
+		</div>					 
+	</div> <!-- sidebar -->
+
+</div> <!-- sidbarContainer -->
+
+
+

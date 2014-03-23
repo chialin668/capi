@@ -1,0 +1,90 @@
+
+<div id="sidebarContainer">
+  <div id="sidebar">
+	 <div id="sidebar-categories">
+
+
+
+&#164; <a href='/hello/index'>index</a> <br />
+
+<br />
+
+<h3>Ajax:</h3>
+&#164; 
+<%=
+	ajax_params = "'stype='+ escape($('stype').value) " + 
+				"+ '&html_type='+ escape($('html_type').value)" + 
+				"+ '&county_name='+ escape($('county_name').value)"
+
+	link_to_remote( "ajax", 
+							:url => { :controller => 'hello', :action => 'ajax'}, 
+							:update => 'ajax_div',
+							:with => ajax_params) 
+%><br />
+
+&#164; 
+<%=
+	default_value_arr = ['City', 'city'] 
+	select_tag(:stat_type, options_for_select([['City', 'city'], ['Zipcode', 'zipcode']], default_value_arr), 
+						:onchange=>remote_function(
+							:url =>{:controller => 'hello', :action => 'ajax_form'},
+							:update => 'ajax_div',
+							:with => ajax_params)) 
+%><br />
+
+
+<br />
+
+<h3>GMap:</h3>
+&#164; <a href='/hello/gmap_js'>gmap_js</a> <br />
+&#164; <a href='/hello/gmap_ruby'>gmap_ruby</a> <br />
+&#164; <a href='/hello/gmap_polygon'>gmap_polygon</a> <br />
+&#164; <a href='/hello/gmap_marker'>gmap_marker</a> <br/>
+&#164; <a href='/hello/gmap_marker_custom'>gmap_marker_custom</a> <br/>
+<br />
+
+<h3>Ajax on GMap:</h3>
+<h4>NO :update</h4>
+
+<%= hidden_field_tag :stype, @stype %>
+<%= hidden_field_tag :county_name, @county_name %>
+<%= hidden_field_tag :html_type, 'ajax' %>
+
+&#164; <%= 
+	ajax_params = "'stype='+ escape($('stype').value) " + 
+				"+ '&html_type='+ escape($('html_type').value)" + 
+				"+ '&county_name='+ escape($('county_name').value)"
+
+	link_to_remote( "gmap_refresh", 
+							:url => { :controller => 'hello', :action => 'gmap_refresh'}, 
+							:with => ajax_params) 
+
+%> <br />
+
+&#164; 
+<%=
+	default_value_arr = ['City', 'city'] 
+	select_tag(:stat_type, options_for_select([['City', 'city'], ['Zipcode', 'zipcode']], default_value_arr), 
+						:onchange=>remote_function(
+							:url =>{:controller => 'hello', :action => 'gmap_refresh_form'},
+							:with => ajax_params)) 
+%> <br /><br />
+
+
+&#164; 
+<%=
+	ajax_params = "'stype='+ escape($('stype').value) " + 
+				"+ '&html_type='+ escape($('html_type').value)" + 
+				"+ '&county_name='+ escape($('county_name').value)"
+
+	link_to_remote( "create gmap", 
+							:url => { :controller => 'hello', :action => 'gmap_create'}, 
+							:with => ajax_params) 
+%><br />
+
+
+	</div>					 
+  </div> <!-- sidebar -->
+</div> <!-- sidbarContainer -->
+	 	
+		

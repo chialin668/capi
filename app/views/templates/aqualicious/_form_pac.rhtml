@@ -1,0 +1,119 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :year, @year %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<table>
+		<%
+			if School.has_7th_grade?(@school_code)
+			   @grade='7' # for middle school
+			else
+				@grade='3' # for elementary school
+			end
+		%>		
+		</tr>
+		
+		<tr>
+			<td>	
+				<p><label for="test">Test Name:</label>
+			</td>
+			<td>
+				<%=
+					found_test = false
+					tests=School.get_cat6_test_names(@year, @grade, @school_code)	
+					test_arr=[]
+					tests.each {|t| 
+						found_test = true if params[:test_id].to_i == t.test_id.to_i
+						arr=[t.test_name, t.test_id]
+						test_arr << arr
+					}
+
+					# default value
+					if params[:test_id] and found_test
+			        	@test_id = params[:test_id]
+					else 
+						if tests.length > 0
+							@test_id=tests[0].test_id
+						else
+							@test_id=0
+						end
+					end
+
+					select_tag(:test_id, options_for_select(test_arr, @test_id.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&test_id='+ escape($('test_id').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:test_id,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :star_summary_pac},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td>
+			<% if @test_id %>
+				<% 
+					@xmlurl="xml_source=#{@app_base}/#{@app_name.downcase}/pac_value_xml?" +
+								"xml_params=" + 
+									"test_id=#{@test_id}|" + 
+									"grade=#{@grade}|" + 
+									"year=#{@year}|" + 
+									"school_code=#{@school_code}|" +
+									"district_code=#{@district_code}|" + 
+									"county_code=#{@county_code}" 
+				%>
+				<table cellspacing='0' border='1'>
+					<tr>
+						<td>
+						<%= render(:partial => "templates/#{@theme}/chart_obj") %>
+						</td>
+					</tr>
+				</table>
+			<% end %>	
+			</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td>
+				 <% if controller.controller_name == 'school' %>
+					<%
+							results=StarResult.get_rank_pac75(@grade, @year, @school_code, @test_id)
+							rank=results[0].state_rank_pac75 if results[0]
+					%>
+					<% if rank %>
+						Grade <%=@grade%> at <%=@school_name%> School is ranked <u>#<%=rank%></u> on PAC75 on this subject in California.  <br/>
+						For more information about STAR ranking, please click 
+						<a href='<%=@app_base%>/star/score_main?score_type=pac75&grade=<%=@grade%>'>here</a>.
+					<% end %>
+				<% end %>	
+			</td>
+		</tr>
+
+	</table>
+<br/>
+
+<ul>
+	<li>A percentile rank is the percentage of scale scores for students in a national sample of students, in the same grade, tested at a comparable time of the school year, that fall below the scale score for the student. 
+</li><li>The CAT/6 Survey uses a scale from 0 to 999 that begins in kindergarten and goes through grade twelve. </li>
+	<li>These scores correspond to the percentage of students in the school, district, county, or state with scores corresponding to those of students in the top quarter of the 2000 national sample (above 75th NPR), in the top half of the 2000 national sample (at or above the 50th NPR), and in the top three-quarters of the 2000 national sample (above the 25th NPR). </li>
+</ul>
+
+
+</div>	
+

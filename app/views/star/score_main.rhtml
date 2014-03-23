@@ -1,0 +1,9 @@
+
+
+
+<%= render(:partial => "mean_g#{@grade}") if @score_type=='mean_scaled_score' %>
+
+<%= render(:partial => "pac75_g#{@grade}") if @score_type=='pac75' %>
+
+<%= render(:partial => "cst_g#{@grade}") if @score_type=='cst_pct_advanced' %>
+

@@ -1,0 +1,74 @@
+<%
+ajax_params=
+	"'html_type='+ escape($('html_type').value) " + 
+	"+ '&type='+ escape($('type').value)" + 
+	"+ '&tru_type='+ escape($('tru_type').value)" + 
+	"+ '&name='+ escape($('name').value)" 
+%>
+	
+
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :type, @type %>
+	<%= hidden_field_tag :name, @name %>
+	<%= hidden_field_tag :growth, @growth %>
+
+
+	<b>Type:</b>
+	<%=
+		default_value_arr = ['"Number listed"', 'listed'] if @tru_type == 'listed'
+		default_value_arr = ['Median Price', 'median'] if @tru_type == 'median'
+		default_value_arr = ['Average Price','average'] if @tru_type == 'average'
+
+		select_tag(:tru_type, options_for_select([['Number listed', 'listed'], ['Median Price', 'median'], ['Average Price','average']], 
+														default_value_arr), 
+							:onchange=>remote_function(
+											:url =>{:controller => 'summary', :action => 'county' },
+											:update => 'ajax_div',
+											:with => ajax_params)) 
+	%>
+
+	<b>Trend/Growths:</b>
+	<%=
+		check_value = @growth=='true' ? true : false
+		growth_value = @growth=='true' ? false: true
+		check_box_tag(:growth, value = 'yes', checked = check_value, :onchange=>remote_function(
+											:url =>{:controller => 'summary', :action => 'county' },
+											:update => 'ajax_div',
+											:with => ajax_params + "+ '&growth='+ escape('#{growth_value}')")) 
+%>
+
+<!--	
+	&#164; <%= link_to_remote( "Number listed", :url => { :controller => 'summary', :action => 'county'}, 
+								:with => ajax_params + "+ '&tru_type='+ escape('listed')", :update => 'ajax_div') %>,
+	&#164; <%= link_to_remote( "Median Price", :url => { :controller => 'summary', :action => 'county'}, 
+								:with => ajax_params + "+ '&tru_type='+ escape('median')", :update => 'ajax_div') %>,
+	&#164; <%= link_to_remote( "Average Price", :url => { :controller => 'summary', :action => 'county'}, 
+								:with => ajax_params + "+ '&tru_type='+ escape('average')", :update => 'ajax_div') %><br/>
+	<br />
+	
+	&#164; <%= link_to_remote( "Number listed", :url => { :controller => 'summary', :action => 'county'}, 
+								:with => ajax_params + "+ '&tru_type='+ escape('listed')"  + "+ '&growth='+ escape('yes')", 
+								:update => 'ajax_div') %>,
+	&#164; <%= link_to_remote( "Median Price", :url => { :controller => 'summary', :action => 'county'}, 
+								:with => ajax_params + "+ '&tru_type='+ escape('median')"  + "+ '&growth='+ escape('yes')", 
+								:update => 'ajax_div') %>,
+	&#164; <%= link_to_remote( "Average Price", :url => { :controller => 'summary', :action => 'county'}, 
+								:with => ajax_params + "+ '&tru_type='+ escape('average')"  + "+ '&growth='+ escape('yes')", 
+								:update => 'ajax_div') %><br/>
+	<br />
+-->
+
+	<br /><br />
+	<%= render(:partial => "templates/#{@theme}/chart_tru", :locals => {:data_method => "county_xml"} ) %>
+	<br />
+
+	<div id='county' align='left'>
+
+	</div>
+
+
+</div>	

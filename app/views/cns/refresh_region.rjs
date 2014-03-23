@@ -1,0 +1,41 @@
+
+url_base="http://www.ifansee.com"
+api_app_base="/capi"
+
+title = "<h1>Carlifornia API Summary</h1>"
+tagline = ""
+
+@map = Variable.new("map")
+page << @map.clear_overlays
+
+marker_not_found=false
+html, tagline, marker_not_found = region_draw_markers(page) if @scount != ''
+mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>" 
+html += mnf_symbol_str if marker_not_found
+
+set_geo_center(page) 
+
+page['pageHeader'].replace_html(title + tagline)
+page['sidebar_ajax'].replace_html(html)
+
+
+# Legend
+draw_legend(page)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

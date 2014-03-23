@@ -1,0 +1,23 @@
+ 
+<h2>County - (Month: <%=@month%>)</h2>
+<h4>(Bedroom Count: <%=@bedroom%>)</h4>
+
+<table cellspacing='0' border='1'>
+<tr>
+	<th class='school' align='center'>County Name</th>
+	<th class='number' align='center'> - </th>
+</tr>
+
+<% for record in @records %>
+	<tr>
+	<td><%= record.name%> </td>
+	 <%= "<td align='right'>#{record.data.to_s.gsub(/(.)(?=.{3}+$)/, %q(\1,))}</td>" if @record_type == 'num_listed' %>
+	 <%= "<td align='right'>#{number_to_currency(record.data)}</td>" if @record_type == 'median_price' %>
+	 <%= "<td align='right'>#{number_to_currency(record.data)}</td>" if @record_type == 'average_price' %>
+	</tr>
+<% end %>
+
+</table>
+<br />
+
+

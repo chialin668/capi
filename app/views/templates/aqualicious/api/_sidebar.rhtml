@@ -1,0 +1,134 @@
+
+
+    <div id="sidebarContainer">
+
+      <div id="sidebar">
+
+        <h1 class="sideHeader">Sort By:</h1>
+        <br />
+		 <div id="sidebar-categories">
+		 	
+			
+		 	<b>All Schools in California:</b><br />
+			<% if @school_type == 'H' && controller.action_name =='all_schools' then %>			
+				High |
+			<% else %>
+				<a href='<%=@app_base%>/api/all_schools?year=<%=@year%>&school_type=H'>High</a> | 
+			<% end %>
+			
+			<% if @school_type == 'M' && controller.action_name =='all_schools' then %>			
+				Middle |
+			<% else %>
+				<a href='<%=@app_base%>/api/all_schools?year=<%=@year%>&school_type=M'>Middle </a> | 
+			<% end %>
+			
+			<% if @school_type == 'E' && controller.action_name =='all_schools' then %>			
+				Elementary
+			<% else %>
+				<a href='<%=@app_base%>/api/all_schools?year=<%=@year%>&school_type=E'>Elementary </a>
+			<% end %>	
+			<br /><br />
+			
+			
+			
+			<b>Regions:</b><br />
+			<i>SF Bay Area:</i><br />
+			<% if @region=='SF' && @school_type == 'H' && controller.action_name =='regions' then %>			
+				High |
+			<% else %>
+				<a href='<%=@app_base%>/api/regions?region=SF&year=<%=@year%>&school_type=H'>High</a> | 
+			<% end %>
+			
+			<% if @region=='SF' && @school_type == 'M' && controller.action_name =='regions' then %>			
+				Middle |
+			<% else %>
+				<a href='<%=@app_base%>/api/regions?region=SF&year=<%=@year%>&school_type=M'>Middle </a> | 
+			<% end %>
+			
+			<% if @region=='SF' && @school_type == 'E' && controller.action_name =='regions' then %>			
+				Elementary
+			<% else %>
+				<a href='<%=@app_base%>/api/regions?region=SF&year=<%=@year%>&school_type=E'>Elementary </a>
+			<% end %>	
+			<br />
+			
+			<i>LA Area:</i><br />
+			<% if @region=='LA' && @school_type == 'H' && controller.action_name =='regions' then %>			
+				High |
+			<% else %>
+				<a href='<%=@app_base%>/api/regions?region=LA&year=<%=@year%>&school_type=H'>High</a> | 
+			<% end %>
+			
+			<% if @region=='LA' && @school_type == 'M' && controller.action_name =='regions' then %>			
+				Middle |
+			<% else %>
+				<a href='<%=@app_base%>/api/regions?region=LA&year=<%=@year%>&school_type=M'>Middle </a> | 
+			<% end %>
+			
+			<% if @region=='LA' && @school_type == 'E' && controller.action_name =='regions' then %>			
+				Elementary
+			<% else %>
+				<a href='<%=@app_base%>/api/regions?region=LA&year=<%=@year%>&school_type=E'>Elementary </a>
+			<% end %>	
+			<br /><br />
+
+
+			
+			
+			<b>Counties:</b><br />
+			<% if @school_type == 'H' && controller.action_name =='counties' then %>			
+				High |
+			<% else %>
+				<a href='<%=@app_base%>/api/counties?year=<%=@year%>&school_type=H'>High</a> |
+			<% end %>
+			
+			<% if @school_type == 'M' && controller.action_name =='counties' then %>			
+				Middle | 
+			<% else %>
+				<a href='<%=@app_base%>/api/counties?year=<%=@year%>&school_type=M'>Middle</a> | 
+			<% end %>
+			
+			<% if @school_type == 'E' && controller.action_name =='counties' then %>			
+				Elementary
+			<% else %>
+				<a href='<%=@app_base%>/api/counties?year=<%=@year%>&school_type=E'>Elementary</a>
+			<% end %>
+			<br /><br />
+
+
+
+			<b>Districts:</b><br />
+			<% if @school_type == 'H' && controller.action_name =='districts' then %>			
+				High |
+			<% else %>
+				<a href='<%=@app_base%>/api/districts?year=<%=@year%>&school_type=H'>High</a> | 
+			<% end %>
+			
+			<% if @school_type == 'M' && controller.action_name =='districts' then %>			
+				Middle |
+			<% else %>
+				<a href='<%=@app_base%>/api/districts?year=<%=@year%>&school_type=M'>Middle</a> |
+			<% end %>
+			
+			<% if @school_type == 'E' && controller.action_name =='districts' then %>			
+				Elementary
+			<% else %>
+				<a href='<%=@app_base%>/api/districts?year=<%=@year%>&school_type=E'>Elementary</a>
+			<% end %>
+			<br />
+
+        </div>		
+
+		<br /><br />
+        <h1 class="sideHeader">Compare:</h1>
+		<br />
+		 <div id="sidebar-categories">
+			<a href='<%=@app_base%>/compare?school_type=H'>High</a> | 
+			<a href='<%=@app_base%>/compare?school_type=M'>Middle</a> | 
+			<a href='<%=@app_base%>/compare?school_type=E'>Elementary</a> <br />
+		</div>					 
+      </div> <!-- sidebar -->
+
+    </div> <!-- sidbarContainer -->
+
+

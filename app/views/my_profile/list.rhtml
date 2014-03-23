@@ -1,0 +1,25 @@
+
+
+	<% if @user %>
+		<h3>Email: <%=@user.email%></h3>
+	<% end %>
+<ul>
+
+	<% if @my_profile %>
+		<li>Rows Per Page: <%=@my_profile.rows_per_page%></li>
+		<li>Last Name: <%=@my_profile.last_name%></li>
+		<li>First Name: <%=@my_profile.first_name%></li>
+		<li>Email Type: <%=@my_profile.email_type%></li>
+		<li>Email News: <%=@my_profile.email_news%></li>
+		<li>Address: <%=@my_profile.address%></li>
+		<li>City: <%=@my_profile.city%></li>
+		<li>State: <%=@my_profile.state%></li>
+		<li>Zip Code: <%=@my_profile.zipcode%></li>
+		<li>Phone Number: <%=@my_profile.phone_number%></li>
+	<% end%>
+</ul>	
+
+<%= link_to 'Edit My Profile', :action => 'edit' %> |
+<%= link_to 'Change My Password', {:controller => 'user', :action => 'change_password'} %> |
+<%= link_to 'Logout', {:controller => 'user', :action => 'logout'} %>
+

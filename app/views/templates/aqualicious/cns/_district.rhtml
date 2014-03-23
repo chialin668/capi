@@ -1,0 +1,76 @@
+<%= hidden_field_tag :html_type, 'ajax' %>
+<%= hidden_field_tag :stype, @stype %> <% # ???session not working for @county_name????? %>
+<%= hidden_field_tag :county_name, @county_name %> <% # ???session not working for @county_name????? %>
+
+<%
+	ajax_params="'stype='+ escape($('stype').value) " +
+			"+ '&district_cds='+ escape($('district_cds').value)" +
+			"+ '&county_name='+ escape($('county_name').value)" +
+			"+ '&html_type='+ escape($('html_type').value)" 
+%>
+
+
+<h3>Please Choose:</h3>
+
+<br />
+
+<%
+	api = ApiGrowth.find_by_county_name(@county_name)
+	county_code = api.county_code
+	districts = ApiGrowth.get_first_district_codes(@current_year, @county_name)
+	type2cds={}
+	for district in districts
+		cds= "%02d%05d0000000" % [county_code, district.district_code]
+		type2cds[district.school_type] = cds
+	end
+%>
+
+School Type:<br />
+<SELECT ONCHANGE="location = this.options[this.selectedIndex].value;">
+	<OPTION VALUE='/cns/district?stype=H&county_name=<%=@county_name%>&district_cds=<%=type2cds['H']%>' <%='selected' if @stype=='H'%>>High
+	<OPTION VALUE='/cns/district?stype=M&county_name=<%=@county_name%>&district_cds=<%=type2cds['M']%>' <%='selected' if @stype=='M'%>>Middle 
+	<OPTION VALUE='/cns/district?stype=E&county_name=<%=@county_name%>&district_cds=<%=type2cds['E']%>' <%='selected' if @stype=='E'%>>Elementary
+</SELECT>
+
+<br /><br />
+
+District Name:
+	<%
+	districts = ApiGrowth.get_district_names(@stype, @current_year, @county_name)
+	district_names = []
+	for district in districts
+		cds= "%02d%05d0000000" % [district.county_code, district.district_code]
+		district_name = district.district_name.length > 20 ? "#{district.district_name[0..20]}..." : district.district_name
+		district_names << [district_name, cds]
+	end
+	%>
+
+	<%= 
+		select_tag(:district_cds, options_for_select(district_names.uniq, @district_cds), 
+							:onchange=>remote_function(
+								:url =>{:controller => @app_name.downcase, :action => :refresh_district},
+								:with => ajax_params)) 
+	%>
+<br /><br />
+
+
+
+<hr>
+
+<div id='sidebar_ajax'>
+	<% 
+		# also called by district.rhtml 
+		html, tagline, marker_not_found = district_draw_markers(nil)
+		mnf_symbol_str = "<br /><br /><font size='-2'>&#8224;: Geo marker not found.</font>" 
+		html += mnf_symbol_str if marker_not_found
+
+		bnf_msg = "<br /><br /><font size='-2'>&#8225;Geo info not found for district.</font>"
+		html += bnf_msg if @district_polygons.size==0 
+	 %>
+
+	<%= html %>	
+</div>		
+
+<br />
+<!--[<A HREF="<%=@app_base%>/cns/county_list">Back</A>]-->
+<a href='/cns/county?stype=<%=@stype%>&county_name=<%=@county_name%>&mtype=district'>Back</a>

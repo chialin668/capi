@@ -1,0 +1,39 @@
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+	<%= hidden_field_tag :show_map, @show_map %>
+	<%= hidden_field_tag :state_id, @state_id %>
+	<%= hidden_field_tag :county_id, @county_id %>
+
+	<% if @show_map %>
+	
+		<table cellspacing='0' border='1'>
+			<tr>
+				<td>
+					<%=
+				      @map = GMap.new("map_div")
+				      @map.control_init(:large_map => true, :map_type => true)
+				      @map.center_zoom_init([37.420644, -121.021325], 8) # center of California
+					  @map.div(:width => 670, :height => 550)
+					%>
+				</td>
+			</tr>
+		</table>	
+		
+		<div id='legend_ajax'>
+			<%= draw_tru_legend(nil) %>
+		</div>
+		
+		<%
+			@html, @tagline, marker_not_found = city_draw_zipcode_polygons(nil)  
+		  	set_geo_center(nil)	
+		%>
+		
+	<% else %>	
+		<%= render :partial => "city" %>
+	<% end %>
+
+
+</div>
+

@@ -1,0 +1,97 @@
+
+<%
+	ajax_params="'county_name='+ escape($('county_name').value) " +
+			"+ '&html_type='+ escape($('html_type').value)" + 
+			"+ '&mtype='+ escape($('mtype').value)" + 
+			"+ '&stype='+ escape($('stype').value)" 
+
+%>
+
+
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+	<table>
+	<!------------------- County ---------------------->
+	<tr>
+	<td align='right'>County:</td>	
+	<td>
+		<%
+			counties=CnsCounty.find(:all, :order=>'county_name')
+			county_names=[]
+			for county in counties
+				county_names << county.county_name
+			end
+		%>
+		<%= 
+			default_value_arr = []
+			default_value_arr << @county_name
+	
+			select_tag(:county_name, options_for_select(county_names.uniq, default_value_arr),  
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => :refresh_county},
+									:with => ajax_params)) 
+		%>
+	</td>	
+	
+	<!------------------- School Type ---------------------->
+	<td align='right'>Type:</td>	
+	<td>
+		<%= 
+			default_value_arr = ['High', 'H'] if @stype == 'H'
+			default_value_arr = ['Middle', 'M'] if @stype == 'M'
+			default_value_arr = ['Elementary', 'E'] if @stype == 'E'
+			
+			select_tag(:stype, options_for_select([['High', 'H'], ['Middle', 'M'], ['Elementary', 'E']], default_value_arr), 
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => :refresh_county},
+									:with => ajax_params)) 
+		%>
+	</td>	
+
+	<td align='right'>Display:</td>
+	<td>
+		<%= 
+			default_value_arr = ['Districts', 'district'] if @mtype == 'district'
+			default_value_arr = ['County Top-10', 'county'] if @mtype == 'county'
+			default_value_arr = ['State Top-50', 'state50'] if @mtype == 'state50'
+			default_value_arr = ['State Top-100', 'state99'] if @mtype == 'state99'
+	
+			select_tag(:mtype, options_for_select([['Districts', 'district'], ['County Top-10', 'county'], ['State Top-50', 'state50'], ['State Top-99', 'state99']], default_value_arr), 
+								:onchange=>remote_function(
+									:url =>{:controller => @app_name.downcase, :action => :refresh_county},
+									:with => ajax_params)) 
+		%>
+	</td>	
+	</tr>
+	</table>
+	
+	<br />
+
+	<table cellspacing='0' border='1'>
+		<tr>
+			<td>
+				<%= 
+				    @map = GMap.new("map_div")
+				    @map.control_init(:large_map => true, :map_type => true)
+					@map.div(:width => 670, :height => 550) 
+				%>
+			</td>
+		</tr>
+	</table>		
+	
+	<div id='legend_ajax'>
+		<%= draw_legend(nil) %>
+	</div>
+	
+	<% 
+		draw_polygons(nil, @polygons)
+	
+		# also called by _sidebar.rhtml (_county.rhtml)
+		html, tagline, marker_not_found = county_draw_markers(nil)
+		set_geo_center(nil)	
+		
+	 %>
+	 
+ </div>

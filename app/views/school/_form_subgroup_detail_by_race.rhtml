@@ -1,0 +1,220 @@
+<div id='ajax_div'>
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<%= hidden_field_tag :school_type, @school_type %>
+	<%= hidden_field_tag :school_code, @school_code %>
+	<%= hidden_field_tag :district_code, @district_code %>
+	<%= hidden_field_tag :county_code, @county_code %>
+
+	<h3>Subgroup Details (<%=@year%>):</h3>
+	<table>
+		<tr>
+			<td>	
+				<p><label for="year">Year:</label>
+			</td>
+			<td>
+				<%=
+					years=[]
+					@current_year.to_i.downto(2004) do |year|
+						years << [year.to_s, year]
+					end				
+
+					@year = (params[:year] ? params[:year] : years[0][1])
+					select_tag(:year, options_for_select(years, @year.to_i))
+				%>
+				<%= 
+					ajax_params="'school_type='+ escape($('school_type').value) " + 
+						"+ '&year='+ escape($('year').value)" + 
+						"+ '&school_code='+ escape($('school_code').value)" + 
+						"+ '&district_code='+ escape($('district_code').value)" + 
+						"+ '&county_code='+ escape($('county_code').value)"
+
+					observe_field(:year,
+								     :url => {
+										:controller => @app_name.downcase,
+										:action => :subgroup_detail_by_race},
+								     :with => ajax_params,
+								     :update => 'ajax_div')
+				%>
+			</td>
+		</tr>
+		
+		
+		<%
+			yr = @year.gsub(/20/,'')
+			lyr = "%02d" % (yr.to_i-1)
+		%>
+		<tr>
+			<td></td>
+			<td>
+
+				<table cellspacing='0' border='1'>
+					<tr>
+						<th class='state' align='center'></th align='center'>
+						<th class='state' align='center'>African American</th align='center'>
+						<th class='state' align='center'>American Indian</th align='center'>
+						<th class='state' align='center'>Asian</th align='center'>
+						<th class='state' align='center'>Filipino</th align='center'>
+						<th class='state' align='center'>Hispanic or Latino</th align='center'>
+						<th class='state' align='center'>Pacific Islander</th align='center'>
+						<th class='state' align='center'>White</th align='center'>
+					</tr>
+					<tr>
+						<td align='center'>Number of Tests Included</td>	
+						<% for record in @records %>
+							<td align='center'><%=record.aa_num%></td align='center'>
+							<td align='center'><%=record.ai_num%></td align='center'>
+							<td align='center'><%=record.as_num%></td align='center'>
+							<td align='center'><%=record.fi_num%></td align='center'>
+							<td align='center'><%=record.hi_num%></td align='center'>
+							<td align='center'><%=record.pi_num%></td align='center'>
+							<td align='center'><%=record.wh_num%></td align='center'>
+						<% end %>
+					</tr>
+				
+					<tr>
+						<td align='center'>Significant Both Years</td>	
+						<% for record in @records %>
+							<td align='center'><%=record.aa_sig%></td align='center'>
+							<td align='center'><%=record.ai_sig%></td align='center'>
+							<td align='center'><%=record.as_sig%></td align='center'>
+							<td align='center'><%=record.fi_sig%></td align='center'>
+							<td align='center'><%=record.hi_sig%></td align='center'>
+							<td align='center'><%=record.pi_sig%></td align='center'>
+							<td align='center'><%=record.wh_sig%></td align='center'>
+						<% end %>
+					</tr>
+					<tr>
+						<td align='center'><%= @year %> Growth</td>	
+						<% for record in @records %>
+							<%
+								aa_data = record.aa_api_yr=='' ? '-' : record.aa_api_yr 
+								ai_data = record.ai_api_yr=='' ? '-' : record.ai_api_yr 
+								as_data = record.as_api_yr=='' ? '-' : record.as_api_yr 
+								fi_data = record.fi_api_yr=='' ? '-' : record.fi_api_yr 
+								hi_data = record.hi_api_yr=='' ? '-' : record.hi_api_yr 
+								pi_data = record.pi_api_yr=='' ? '-' : record.pi_api_yr 
+								wh_data = record.wh_api_yr=='' ? '-' : record.wh_api_yr 
+							%>												
+							<td align='center'><%=aa_data%></td align='center'>
+							<td align='center'><%=ai_data%></td align='center'>
+							<td align='center'><%=as_data%></td align='center'>
+							<td align='center'><%=fi_data%></td align='center'>
+							<td align='center'><%=hi_data%></td align='center'>
+							<td align='center'><%=pi_data%></td align='center'>
+							<td align='center'><%=wh_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'><%= @year.to_i-1 %> Base</td>	
+						<% for record in @records %>
+							<%
+								aa_data = record.aa_api_lyr=='' ? '-' : record.aa_api_lyr 
+								ai_data = record.ai_api_lyr=='' ? '-' : record.ai_api_lyr 
+								as_data = record.as_api_lyr=='' ? '-' : record.as_api_lyr 
+								fi_data = record.fi_api_lyr=='' ? '-' : record.fi_api_lyr 
+								hi_data = record.hi_api_lyr=='' ? '-' : record.hi_api_lyr 
+								pi_data = record.pi_api_lyr=='' ? '-' : record.pi_api_lyr 
+								wh_data = record.wh_api_lyr=='' ? '-' : record.wh_api_lyr 
+							%>												
+							<td align='center'><%=aa_data%></td align='center'>
+							<td align='center'><%=ai_data%></td align='center'>
+							<td align='center'><%=as_data%></td align='center'>
+							<td align='center'><%=fi_data%></td align='center'>
+							<td align='center'><%=hi_data%></td align='center'>
+							<td align='center'><%=pi_data%></td align='center'>
+							<td align='center'><%=wh_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'>Target</td>	
+						<% for record in @records %>
+							<%
+								aa_data = record.aa_targ=='' ? '-' : record.aa_targ 
+								ai_data = record.ai_targ=='' ? '-' : record.ai_targ 
+								as_data = record.as_targ=='' ? '-' : record.as_targ 
+								fi_data = record.fi_targ=='' ? '-' : record.fi_targ 
+								hi_data = record.hi_targ=='' ? '-' : record.hi_targ 
+								pi_data = record.pi_targ=='' ? '-' : record.pi_targ 
+								wh_data = record.wh_targ=='' ? '-' : record.wh_targ 
+							%>												
+							<td align='center' class='api_target_<%=aa_data=='A' ? 'yes' : ''%>'><%=aa_data%></td align='center'>
+							<td align='center' class='api_target_<%=ai_data=='A' ? 'yes' : ''%>'><%=ai_data%></td align='center'>
+							<td align='center' class='api_target_<%=as_data=='A' ? 'yes' : ''%>'><%=as_data%></td align='center'>
+							<td align='center' class='api_target_<%=fi_data=='A' ? 'yes' : ''%>'><%=fi_data%></td align='center'>
+							<td align='center' class='api_target_<%=hi_data=='A' ? 'yes' : ''%>'><%=hi_data%></td align='center'>
+							<td align='center' class='api_target_<%=pi_data=='A' ? 'yes' : ''%>'><%=pi_data%></td align='center'>
+							<td align='center' class='api_target_<%=wh_data=='A' ? 'yes' : ''%>'><%=wh_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'>Grow</td>	
+						<% for record in @records %>
+							<%
+								aa_data = record.aa_grow=='' ? '-' : record.aa_grow 
+								ai_data = record.ai_grow=='' ? '-' : record.ai_grow 
+								as_data = record.as_grow=='' ? '-' : record.as_grow 
+								fi_data = record.fi_grow=='' ? '-' : record.fi_grow 
+								hi_data = record.hi_grow=='' ? '-' : record.hi_grow 
+								pi_data = record.pi_grow=='' ? '-' : record.pi_grow 
+								wh_data = record.wh_grow=='' ? '-' : record.wh_grow 
+							%>												
+							<td align='center' class='<%=aa_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=aa_data%></td align='center'>
+							<td align='center' class='<%=ai_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=ai_data%></td align='center'>
+							<td align='center' class='<%=as_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=as_data%></td align='center'>
+							<td align='center' class='<%=fi_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=fi_data%></td align='center'>
+							<td align='center' class='<%=hi_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=hi_data%></td align='center'>
+							<td align='center' class='<%=pi_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=pi_data%></td align='center'>
+							<td align='center' class='<%=wh_data.to_i >= 0 ? 'api_growth_positive' : 'api_growth_netative'%>'><%=wh_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					<tr>
+						<td align='center'>Met</td>	
+						<% for record in @records %>
+							<%
+								aa_data = record.aa_met=='' ? '-' : record.aa_met 
+								ai_data = record.ai_met=='' ? '-' : record.ai_met 
+								as_data = record.as_met=='' ? '-' : record.as_met 
+								fi_data = record.fi_met=='' ? '-' : record.fi_met 
+								hi_data = record.hi_met=='' ? '-' : record.hi_met 
+								pi_data = record.pi_met=='' ? '-' : record.pi_met 
+								wh_data = record.wh_met=='' ? '-' : record.wh_met 
+							%>												
+							<td align='center' class='api_target_<%=aa_data.downcase%>'><%=aa_data%></td align='center'>
+							<td align='center' class='api_target_<%=ai_data.downcase%>'><%=ai_data%></td align='center'>
+							<td align='center' class='api_target_<%=as_data.downcase%>'><%=as_data%></td align='center'>
+							<td align='center' class='api_target_<%=fi_data.downcase%>'><%=fi_data%></td align='center'>
+							<td align='center' class='api_target_<%=hi_data.downcase%>'><%=hi_data%></td align='center'>
+							<td align='center' class='api_target_<%=pi_data.downcase%>'><%=pi_data%></td align='center'>
+							<td align='center' class='api_target_<%=wh_data.downcase%>'><%=wh_data%></td align='center'>
+						<% end %>
+					</tr>
+					
+					
+				</table>
+				<br />
+				
+				<h4>Targets:</h4>
+				<ul>
+				<li>A = Met Interim Performance Target of 800. </li>
+				<li>B= School did not have a valid <%=@year.to_i-1%> API Base and there is no Growth or target information. </li>
+				<li>C = School had significant demographic changes and there is no Growth or target information. </li>
+				<li>D= There is no growth target for Districts or ASAM schools. </li>
+				<li>E = School was an Alternative Schools Accountability Model (ASAM) school in the API Base report and has no target information even though the school is no longer an ASAM school.</li>
+				</ul>
+				
+
+
+
+
+			</td>
+		</tr>
+	</table>
+</div>	
+
+
+

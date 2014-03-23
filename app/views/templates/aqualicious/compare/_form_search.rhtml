@@ -1,0 +1,11 @@
+
+Search on: 
+<%="High School" if params[:school_type]=='H' %>
+<%="Middle School" if params[:school_type]=='M' %>
+<%="Elementary School" if params[:school_type]=='E' %>
+
+<% form_tag :controller => @app_name.downcase, :action => 'search' do %>
+	<%= hidden_field_tag :school_type, params[:school_type] %>
+	<%= text_field_tag 'query', nil, {:size=>20}%> <br />
+	<%= submit_tag "Search" %>
+<% end %>

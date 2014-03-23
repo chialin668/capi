@@ -1,0 +1,6 @@
+		<% if MySchool.has_this_type_of_school?(session[:user_id], @school_type) then %>
+			To manage my school.....  <a href='<%=@app_base%>/my_school'>Click here</a></td>.
+		<% else %>		
+			My school is not here.....  <a href='<%=@app_base%>/my_school'>Click here</a></td>.
+		<% end %>
+		<br />

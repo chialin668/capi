@@ -1,0 +1,27 @@
+<%
+ajax_params=
+	"'html_type='+ escape($('html_type').value) " + 
+	"+ '&type='+ escape($('type').value)" + 
+	"+ '&name='+ escape($('name').value)"
+%>
+	
+<b>Trends:</b><br />
+&#164; <%= link_to_remote( "Number listed", :url => { :controller => 'summary', :action => 'state'}, :with => ajax_params + "+ '&tru_type='+ escape('listed')", :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Median Price", :url => { :controller => 'summary', :action => 'state'}, :with => ajax_params + "+ '&tru_type='+ escape('median')", :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Average Price", :url => { :controller => 'summary', :action => 'state'}, :with => ajax_params + "+ '&tru_type='+ escape('average')", :update => 'ajax_div') %><br/>
+<br />
+
+<b>Growths:</b><br />
+&#164; <%= link_to_remote( "Number listed", :url => { :controller => 'summary', :action => 'state'}, :with => ajax_params + "+ '&tru_type='+ escape('listed')"  + "+ '&growth='+ escape('yes')", :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Median Price", :url => { :controller => 'summary', :action => 'state'}, :with => ajax_params + "+ '&tru_type='+ escape('median')"  + "+ '&growth='+ escape('yes')", :update => 'ajax_div') %><br/>
+&#164; <%= link_to_remote( "Average Price", :url => { :controller => 'summary', :action => 'state'}, :with => ajax_params + "+ '&tru_type='+ escape('average')"  + "+ '&growth='+ escape('yes')", :update => 'ajax_div') %><br/>
+<br />
+
+<b>Ranks:</b><br />
+&#164; Top 10 on Number listed: <br />
+&#164; Top 10 on Median Price <br />
+&#164; Top 10 on Average Price <br />
+
+<br /></br />
+
+[<A HREF="javascript:javascript:history.go(-1)">Back</A>]

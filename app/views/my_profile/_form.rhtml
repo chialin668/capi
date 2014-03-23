@@ -1,0 +1,145 @@
+<%= error_messages_for 'my_school' %>
+
+<br />
+
+<table>
+	<tr>
+		<td align='right'><label for="my_profile_rows_per_page">Rows per page:</label></td>
+		<td><%= 
+			select(:my_profile,
+						:rows_per_page,
+						[ ['10', 10],
+						  ['20', 20],
+						  ['30', 30],
+						  ['50', 50] 
+					])
+		%></td>
+	</tr>
+	
+	<tr>
+		<td align='right'><label for="my_profile_solution">Solution:</label></td>
+		<td><%= 
+			select(:my_profile,
+						:solution,
+						[ ['Mr.', 0],
+						  ['Mrs.', 1],
+						  ['Ms.', 2]
+					 ])
+		%></td>
+	</tr>
+	
+	<tr>
+		<td align='right'><label for="my_profile_last_name">Last Name:</label></td>
+		<td><%= text_field 'my_profile', 'last_name'  %></td>
+	</tr>
+	
+	<tr>
+		<td align='right'><label for="my_profile_first_name">First Name:</label></td>
+		<td><%= text_field 'my_profile', 'first_name'  %></td>
+	</tr>
+	
+	<tr>
+		<td align='right'><label for="my_profile_email_type">Email Type:</label></td>
+		<td>
+			<%= radio_button(:my_profile, :email_type, 'Text') %>text
+			<%= radio_button(:my_profile, :email_type, 'HTML') %>html
+		</td>
+		<!--
+		<%= radio_button(:my_profile, :email_type, 0) %>text
+		<%= radio_button(:my_profile, :email_type, 1) %>html
+		-->
+	</tr>
+
+	<tr>
+		<td align='right'><label for="my_profile_email_news">Email News:</label></td>
+		<td>
+			<%= radio_button(:my_profile, :email_news, 'N') %>No
+			<%= radio_button(:my_profile, :email_news, 'Y') %>Yes
+		</td>
+		<!--
+		<%= radio_button(:my_profile, :email_news, false) %>No
+		<%= radio_button(:my_profile, :email_news, true) %>Yes
+		-->
+	</tr>	
+
+	<tr>
+		<td align='right'><label for="my_profile_address">Address:</label></td>
+		<td><%= text_field 'my_profile', 'address', :size=>64 %></td>
+	</tr>	
+	
+	<tr>
+		<td align='right'><label for="my_profile_city">City:</label></td>
+		<td><%= text_field 'my_profile', 'city'  %></td>
+	</tr>	
+	
+	<tr>
+		<td align='right'><label for="my_profile_state">State:</label></td>
+		<td><%=
+				select(:my_profile,
+						:state,
+						[ ['Alaska' , 'AK'],
+							['Alabama' , 'AL'],
+							['Arkansas' , 'AR'],
+							['Arizona' , 'AZ'],
+							['California' , 'CA'],
+							['Colorado' , 'CO'],
+							['Connecticut' , 'CT'],
+							['D.C.' , 'DC'],
+							['Delaware' , 'DE'],
+							['Florida' , 'FL'],
+							['Georgia' , 'GA'],
+							['Hawaii' , 'HI'],
+							['Iowa' , 'IA'],
+							['Idaho' , 'ID'],
+							['Illinois' , 'IL'],
+							['Indiana' , 'IN'],
+							['Kansas' , 'KS'],
+							['Kentucky' , 'KY'],
+							['Louisiana' , 'LA'],
+							['Massachusetts' , 'MA'],
+							['Maryland' , 'MD'],
+							['Maine' , 'ME'],
+							['Michigan' , 'MI'],
+							['Minnesota' , 'MN'],
+							['Missouri' , 'MO'],
+							['Mississippi' , 'MS'],
+							['Montana' , 'MT'],
+							['North Carolina' , 'NC'],
+							['North Dakota' , 'ND'],
+							['Nebraska' , 'NE'],
+							['New Hampshire' , 'NH'],
+							['New Jersey' , 'NJ'],
+							['New Mexico' , 'NM'],
+							['Nevada' , 'NV'],
+							['New York' , 'NY'],
+							['Ohio' , 'OH'],
+							['Oklahoma' , 'OK'],
+							['Oregon' , 'OR'],
+							['Pennsylvania' , 'PA'],
+							['Rhode Island' , 'RI'],
+							['South Carolina' , 'SC'],
+							['South Dakota' , 'SD'],
+							['Tennessee' , 'TN'],
+							['Texas' , 'TX'],
+							['Utah' , 'UT'],
+							['Virginia' , 'VA'],
+							['Vermont' , 'VT'],
+							['Washington' , 'WA'],
+							['Wisconsin' , 'WI'],
+							['West Virginia' , 'WV'],
+							['Wyoming' , 'WY']
+		 			])
+		%></td>
+	</tr>
+	
+	<tr>
+		<td align='right'><label for="my_profile_zipcode">Zip Code:</label><br/></td>
+		<td><%= text_field 'my_profile', 'zipcode'  %></td>
+	</tr>
+	
+	<tr>
+		<td align='right'><label for="my_profile_phone_number">Phone Number:</label><br/></td>
+		<td><%= text_field 'my_profile', 'phone_number'  %></td>
+	</tr>
+	
+</table>

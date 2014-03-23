@@ -1,0 +1,11 @@
+
+/* http://www.somacon.com/p141.php */
+
+table.gmap {
+  display: none;
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 0px;
+	border-style: groove groove groove groove;
+	border-color: gray gray gray gray;
+	border-collapse: separate;
+}

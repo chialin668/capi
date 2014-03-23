@@ -1,0 +1,43 @@
+
+<div id='ajax_div'>
+
+	<%= hidden_field_tag :html_type, 'ajax' %>
+
+	<table cellspacing='0' border='1'>
+		<tr>
+			<td>
+				<%=
+			      @map = GMap.new("map_div")
+			      @map.control_init(:large_map => true, :map_type => true)
+			      @map.center_zoom_init([37.420644, -121.021325], 8) # center of California
+
+				#
+				# draw a marker
+				#
+				load_markers(@map)
+				
+				@map.icon_global_init(GIcon.new(:image => "/images/icons/misc/building.png",                           
+				                            :icon_size => GSize.new(20,34),
+				                            :icon_anchor => GPoint.new(12,34),
+				                            :shadow => "/images/icons/misc/shadow.png",
+				                            :shadow_size => GSize.new(37,34),
+				                            :info_window_anchor => GPoint.new(9,2)), 
+				                            "marker")    
+
+				icon = Variable.new("marker") 
+
+				@map.record_init @map.add_overlay(GMarker.new([37.420644, -121.021325],
+										:icon => icon,
+										:title => 'title', 
+										:info_window => 'info'))
+
+				  @map.div(:width => 670, :height => 550)
+				%>
+			</td>
+		</tr>
+	</table>		
+	
+	
+	
+</div>
+

@@ -1,0 +1,11 @@
+  
+#page['map_div'].hide()
+#page['ajax_div'].show()
+
+page['hidden'].show()
+#page['hidden'].hide()
+
+#html = '123'  
+#page['ajax_div'].replace_html(html)
+
+
